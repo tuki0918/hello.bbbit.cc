@@ -365,6 +365,48 @@ body {
   text-underline-offset: 0.25em;
 }
 
+/* ---------- First-open reveal ---------- */
+/* The first time the card opens, the inside is covered in navy cells on the card's
+   grid (10 x 6 per panel, built by main.js) and a "laser" uncovers them one by one
+   in a zigzag from the top edge down, each cell flashing cyan as it goes. */
+.reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  pointer-events: none;
+}
+.reveal span {
+  background: var(--navy);
+  /* Hides hairline gaps between cells from sub-pixel rounding. */
+  box-shadow: 0 0 0 0.5px var(--navy);
+}
+/* The fold stays visible while the inside is still covered. */
+.inner-top .reveal .fold {
+  background-image: linear-gradient(transparent 35%, rgb(0 0 0 / 45%));
+}
+.inner-bottom .reveal .fold {
+  background-image: linear-gradient(rgb(0 0 0 / 45%), transparent 65%);
+}
+.scene.revealing .reveal span {
+  animation: laser 0.12s linear both;
+  animation-delay: var(--delay);
+}
+@keyframes laser {
+  40% {
+    background: var(--cyan);
+    box-shadow: none;
+    opacity: 1;
+  }
+  100% {
+    background: var(--cyan);
+    box-shadow: none;
+    opacity: 0;
+  }
+}
+
 /* ---------- Floor shadow ---------- */
 .shadow {
   position: absolute;

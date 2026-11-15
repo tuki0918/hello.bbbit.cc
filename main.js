@@ -19,7 +19,58 @@
   const faces = [...document.querySelectorAll(".face")];
   let view = "cover";
 
+  /* ---------- First-open reveal ---------- */
+  // Cover the inside with grid cells and uncover them in a zigzag the first time
+  // the card opens (same idea as the laser-reveal-effect library, without React).
+  const REVEAL = { cols: 10, rows: 6, start: 0.15, sweep: 0.7, cell: 0.12 };
+  const revealLayers = [];
+  let revealState = "ready"; // ready -> running -> done
+
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    revealState = "done";
+  } else {
+    // The sweep runs from the top edge down. The top panel is the back of the flap, so
+    // it only comes into view once the flap swings past halfway (about 0.15s in);
+    // the sweep waits just that long.
+    ["inner-top", "inner-bottom"].forEach((id, panel) => {
+      const layer = document.createElement("div");
+      layer.className = "reveal";
+      layer.setAttribute("aria-hidden", "true");
+      const total = REVEAL.cols * REVEAL.rows * 2;
+      for (let r = 0; r < REVEAL.rows; r++) {
+        // Rows counted from the top of the opened spread.
+        const row = panel * REVEAL.rows + r;
+        // The rows either side of the fold carry its shading.
+        const atFold = panel === 0 ? r === REVEAL.rows - 1 : r === 0;
+        for (let c = 0; c < REVEAL.cols; c++) {
+          const cell = document.createElement("span");
+          if (atFold) cell.className = "fold";
+          const step = row % 2 === 0 ? c : REVEAL.cols - 1 - c; // every other row runs right to left
+          const order = row * REVEAL.cols + step;
+          const delay = REVEAL.start + (order / total) * REVEAL.sweep;
+          cell.style.setProperty("--delay", `${delay.toFixed(3)}s`);
+          layer.append(cell);
+        }
+      }
+      document.getElementById(id).append(layer);
+      revealLayers.push(layer);
+    });
+  }
+
+  function startReveal() {
+    if (revealState !== "ready") return;
+    revealState = "running";
+    scene.classList.add("revealing");
+    const total = (REVEAL.start + REVEAL.sweep + REVEAL.cell) * 1000;
+    setTimeout(() => {
+      for (const layer of revealLayers) layer.remove();
+      scene.classList.remove("revealing");
+      revealState = "done";
+    }, total + 100);
+  }
+
   function setView(next) {
+    if (next === "open") startReveal();
     view = next;
     scene.dataset.view = view;
     for (const face of faces) face.inert = !VISIBLE[view].includes(face.id);
