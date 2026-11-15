@@ -388,10 +388,21 @@ body {
   z-index: 2;
   pointer-events: none;
 }
+/* On the card: centre of the third cell from the right, just inside the top edge. */
+.callout-anchor {
+  position: absolute;
+  right: 5.5em;
+  top: 0.2em;
+  width: 0;
+  height: 0;
+}
+/* main.js moves the dot (and the diagonal's start) onto the anchor as the card tilts;
+   this transform is where it rests when the card is flat. */
 .callout-dot {
   position: absolute;
-  left: 0.1em;
-  bottom: 0;
+  left: 0;
+  top: 0;
+  transform: translate(0.3em, 2.4em) translate(-50%, -50%);
   width: 0.4em;
   height: 0.4em;
   background: var(--cyan);

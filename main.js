@@ -82,6 +82,44 @@
     });
   }
 
+  /* ---------- Callout start point follows the card ---------- */
+  // The label and the horizontal line stay put; the dot and the start of the
+  // diagonal are moved each frame onto a marker that tilts with the card.
+  const callout = document.getElementById("callout");
+  const anchor = document.getElementById("callout-anchor");
+  const dot = document.getElementById("callout-dot");
+  const diagLine = document.getElementById("callout-diag-line");
+  let trackUntil = 0;
+  let tracking = false;
+
+  function track(now) {
+    // Only on the cover: once the flap starts to open, the start point stays where it was.
+    if (view === "cover") {
+      const at = anchor.getBoundingClientRect();
+      const box = callout.getBoundingClientRect();
+      const x = at.left - box.left;
+      const y = at.top - box.top;
+      diagLine.setAttribute("x1", x.toFixed(2));
+      diagLine.setAttribute("y1", y.toFixed(2));
+      dot.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) translate(-50%, -50%)`;
+    }
+    tracking = now < trackUntil;
+    if (tracking) requestAnimationFrame(track);
+  }
+  // Keep tracking for a moment after the last movement so the tilt can settle.
+  function wakeTracking() {
+    trackUntil = performance.now() + 1500;
+    if (!tracking) {
+      tracking = true;
+      requestAnimationFrame(track);
+    }
+  }
+  scene.addEventListener("pointermove", wakeTracking);
+  scene.addEventListener("pointerleave", wakeTracking);
+  book.addEventListener("click", wakeTracking);
+  addEventListener("resize", wakeTracking);
+  wakeTracking();
+
   /* ---------- QR code ---------- */
   const NAVY = "#071428";
   const QUIET = 2; // quiet-zone modules around the code
