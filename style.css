@@ -454,20 +454,27 @@ body {
   transform: translateY(0.3em);
 }
 
-/* Hiding runs the reveal backwards: label, horizontal line, diagonal, dot. */
+/* Hiding runs the reveal backwards, quickly: label, horizontal line, diagonal, dot. */
 .callout-text {
   transition:
-    opacity 0.25s,
-    transform 0.25s;
+    opacity 0.1s,
+    transform 0.1s;
 }
 .callout-rule line {
-  transition: stroke-dashoffset 0.3s ease-in 0.2s;
+  transition: stroke-dashoffset 0.12s ease-in 0.06s;
 }
 .callout-diag line {
-  transition: stroke-dashoffset 0.25s ease-in 0.5s;
+  transition: stroke-dashoffset 0.1s ease-in 0.18s;
 }
 .callout-dot {
-  transition: opacity 0.15s 0.75s;
+  transition: opacity 0.08s 0.28s;
+}
+/* Once the card opens it would sit on top of the paper, so drop it at once. */
+.callout {
+  transition: opacity 0.1s;
+}
+.scene:not([data-view="cover"]) .callout {
+  opacity: 0;
 }
 
 /* Revealing: dot, diagonal, horizontal line, label. */
@@ -577,6 +584,7 @@ body {
   .tilt {
     transition-duration: 0.01s;
   }
+  .callout,
   .callout line,
   .callout-dot,
   .callout-text {
