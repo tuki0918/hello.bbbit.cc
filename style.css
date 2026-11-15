@@ -257,10 +257,7 @@ body {
   white-space: nowrap;
 }
 /* ---------- Inside spread ---------- */
-/* The inside is set in a rounded gothic; the outside keeps Space Grotesk. */
 .inner {
-  --inner-font: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
-  font-family: var(--inner-font);
   background: #fff;
   color: var(--navy);
   box-shadow: inset 0 0 0 1px rgb(7 20 40 / 10%);
@@ -301,18 +298,26 @@ body {
   object-position: 50% 100%;
   padding-top: 0.5em;
 }
+/* The text column is exactly as tall as the avatar tile: the name sits on its top
+   edge and the social icons on its bottom edge (as on the back, beside the QR). */
+.inner-id {
+  height: 6.6em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .inner-name {
   margin: 0;
-  font-family: var(--inner-font);
+  font-family: "Space Grotesk", sans-serif;
   font-size: 1.2em;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 .inner-role {
-  margin: 0.7em 0 0;
-  font-family: var(--inner-font);
+  margin: 0.9em 0 0;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.62em;
   font-weight: 500;
   line-height: 1.7;
@@ -320,56 +325,125 @@ body {
   text-transform: uppercase;
   color: #0c8a98;
 }
-/* Same one-cell side margins as the panel above. */
-.inner-bottom {
-  padding: 1.5em 2.2em;
-}
-.links {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, 1fr);
-  column-gap: 1.4em;
+/* Social links: bare icons. Each link is padded for an easier tap, and the row is
+   pulled back by the same amount so the icons stay flush with the text above. */
+.socials {
+  display: flex;
+  gap: 0.3em;
   list-style: none;
-  margin: 0;
+  margin: auto 0 -0.5em -0.5em;
   padding: 0;
 }
-.links li {
-  display: flex;
-  border-top: 1px solid rgb(7 20 40 / 12%);
+.socials a {
+  display: block;
+  padding: 0.5em;
+  color: var(--navy);
 }
-.links li:nth-child(-n + 2) {
-  border-top: 0;
+.socials svg {
+  display: block;
+  width: 1.1em;
+  height: 1.1em;
+  fill: currentColor;
 }
-.links a {
-  flex: 1;
+.socials .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.socials a:hover,
+.socials a:focus-visible {
+  color: #0c8a98;
+}
+
+/* Lower panel: about bbbit, on the same navy as the cover. Same one-cell side
+   margins as the panel above; the four letter columns are two cells wide each, so
+   every glyph starts on a grid line. */
+.inner-bottom {
+  padding: 1.4em 2.2em 1.5em;
+  background: linear-gradient(200deg, #0d2140 0%, var(--navy) 55%, #040c19 100%);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 8%);
+}
+.inner-bottom::before {
+  z-index: 1;
+  background: linear-gradient(rgb(0 0 0 / 40%), transparent);
+}
+.inner-bottom > p,
+.inner-bottom > ul {
+  position: relative;
+}
+.about-head {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.2em;
-  min-width: 0;
-  color: inherit;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.6em;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+}
+.about-head span {
+  text-transform: uppercase;
+}
+.about-head a {
+  color: rgb(255 255 255 / 66%);
   text-decoration: none;
 }
-.links .k {
-  font-family: var(--inner-font);
-  font-size: 0.58em;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #5d6b7e;
-}
-.links .v {
-  font-family: var(--inner-font);
-  font-size: 0.9em;
-  font-weight: 500;
-}
-.links a:hover .v,
-.links a:focus-visible .v {
+.about-head a:hover,
+.about-head a:focus-visible {
+  color: #fff;
   text-decoration: underline;
   text-decoration-color: var(--cyan);
   text-decoration-thickness: 2px;
   text-underline-offset: 0.25em;
+}
+.about-lead {
+  margin: 0.7em 0 0;
+  font-size: 0.8em;
+  font-weight: 600;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.about-sub {
+  margin: auto 0 0;
+  padding-top: 0.9em;
+  border-top: 1px solid rgb(255 255 255 / 16%);
+  font-size: 0.56em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgb(255 255 255 / 66%);
+}
+.letters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+  margin: 0.8em 0 0;
+  padding: 0;
+}
+.letters li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55em;
+}
+/* One grid cell tall. */
+.letters svg {
+  display: block;
+  height: 2.2em;
+  width: auto;
+  fill: #fff;
+}
+.letters .it-dot {
+  fill: var(--cyan);
+}
+.letters span {
+  font-size: 0.54em;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 /* ---------- First-open reveal ---------- */
@@ -621,7 +695,8 @@ body {
   }
 }
 .btn:focus-visible,
-.links a:focus-visible {
+.socials a:focus-visible,
+.about-head a:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
