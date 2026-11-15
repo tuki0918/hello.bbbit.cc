@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101214" media="(prefers-color-scheme: dark)" />
+    <meta name="description" content="Yuta Yamamoto — Software Engineer / Indie Developer (bbbit) のデジタル名刺" />
+    <meta property="og:title" content="Yuta Yamamoto — bbbit" />
+    <meta property="og:description" content="Software Engineer / Indie Developer のデジタル名刺" />
+    <!--
+      QRコードに埋め込むURL。空のままなら、いま開いているページのURLを使います。
+      公開先が決まったら content に入れてください（例: https://meishi.example.com/）。
+    -->
+    <meta name="card-url" content="" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&amp;family=Space+Grotesk:wght@400..700&amp;display=swap"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Yuta Yamamoto — bbbit</title>
+  </head>
+  <body>
+    <main class="stage">
+      <div class="scene">
+        <div class="tilt" id="tilt">
+          <div
+            class="card"
+            id="card"
+            role="button"
+            tabindex="0"
+            aria-pressed="false"
+            aria-label="名刺を裏返す"
+          >
+            <!-- オモテ -->
+            <section class="face front" id="front" aria-label="名刺 オモテ">
+              <span class="corner" aria-hidden="true"></span>
+              <div class="grid" aria-hidden="true"></div>
+
+              <svg class="logo" viewBox="0 0 164 52" fill="none" role="img" aria-label="bbbit">
+                <g fill="currentColor" transform="translate(2 2)">
+                  <path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" />
+                  <path fill-rule="evenodd" d="M39 0h9v14h23v34H39V0Zm9 23v16h14V23H48Z" />
+                  <path fill-rule="evenodd" d="M78 0h9v14h23v34H78V0Zm9 23v16h14V23H87Z" />
+                  <path d="M117 14h9v34h-9zM140 0h9v14h11v9h-11v16h11v9h-20V23h-8v-9h8V0Z" />
+                </g>
+                <path fill="#16BED0" d="M119 2h9v9h-9z" />
+              </svg>
+
+              <div class="identity">
+                <p class="eyebrow">Software Engineer<br />Indie Developer</p>
+                <h1 class="name">Yuta<br />Yamamoto</h1>
+                <p class="place"><span class="dot" aria-hidden="true"></span>Wakayama, Japan</p>
+              </div>
+
+              <p class="domain">bbbit.cc</p>
+              <div class="glare" aria-hidden="true"></div>
+            </section>
+
+            <!-- ウラ -->
+            <section class="face back" id="back" aria-label="名刺 ウラ" inert>
+              <span class="corner" aria-hidden="true"></span>
+
+              <p class="bio">和歌山市を拠点に、個人でアプリやツールを設計・開発しています。</p>
+
+              <ul class="links">
+                <li>
+                  <a href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
+                    <span class="k">Web</span><span class="v">bbbit.cc</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:hello@bbbit.cc">
+                    <span class="k">Mail</span><span class="v">hello@bbbit.cc</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/tuki0918" target="_blank" rel="noopener noreferrer">
+                    <span class="k">GitHub</span><span class="v">tuki0918</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://zenn.dev/tuki0918" target="_blank" rel="noopener noreferrer">
+                    <span class="k">Zenn</span><span class="v">tuki0918</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://note.com/tuki0918" target="_blank" rel="noopener noreferrer">
+                    <span class="k">note</span><span class="v">tuki0918</span>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="qr-row">
+                <div class="qr" id="qr" role="img" aria-label="この名刺のQRコード"></div>
+                <p class="qr-note">Scan to open<br />this card</p>
+              </div>
+              <div class="glare" aria-hidden="true"></div>
+            </section>
+          </div>
+        </div>
+        <div class="shadow" aria-hidden="true"></div>
+      </div>
+
+      <p class="hint" id="hint">タップで裏返す</p>
+
+      <nav class="actions" aria-label="操作">
+        <button type="button" class="btn" id="flip">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 0 1 14-3l2 2M20 4v4h-4M20 15a8 8 0 0 1-14 3l-2-2M4 20v-4h4" /></svg>
+          <span id="flip-label">ウラを見る</span>
+        </button>
+        <a class="btn primary" href="yuta-yamamoto.vcf" download="yuta-yamamoto.vcf">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 8v6M16 11h6" /></svg>
+          連絡先に追加
+        </a>
+        <button type="button" class="btn" id="share">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /></svg>
+          <span id="share-label">共有</span>
+        </button>
+      </nav>
+
+      <button type="button" class="qr-save" id="qr-save">QRコードを画像で保存</button>
+    </main>
+
+    <script src="vendor/qrcode.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
