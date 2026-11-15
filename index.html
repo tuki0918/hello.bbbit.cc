@@ -70,7 +70,7 @@
                 <div class="grid" aria-hidden="true"></div>
                 <div class="qr" id="qr" role="img" aria-label="この名刺のQRコード"></div>
                 <div class="back-info">
-                  <p class="trade">IT導入・業務改善</p>
+                  <p class="trade">ITで困りごとを解決</p>
                   <p class="catch">身近な不便を、<br />便利に変えよう。</p>
                   <p class="domain">bbbit.cc</p>
                 </div>
@@ -110,12 +110,13 @@
 
         <!-- 表紙のときだけ、カードから線が伸びて出る案内。PCではホバー中、スマホでは最初のタップまで表示。 -->
         <div class="callout" aria-hidden="true">
-          <!-- 1 unit = 0.1em。カード上辺は y=22。斜め線は1マス分(2.2em)上まで伸びる。 -->
-          <svg viewBox="0 0 120 26">
-            <path d="M3 24 27 0H120" pathLength="1" />
+          <!-- 1 unit = 0.1em。カード上辺は y=22。斜め線は右上へ1マス分(2.2em)伸びる。 -->
+          <svg viewBox="0 0 27 26">
+            <path d="M3 24 27 0" pathLength="1" />
             <rect x="1" y="22" width="4" height="4" />
           </svg>
-          <span class="callout-text" id="callout-text">タップでひらく</span>
+          <!-- 横線はこの要素の下線なので、長さは文字の幅と同じになる。 -->
+          <span class="callout-label"><span class="callout-text">タップでひらく</span></span>
         </div>
       </div>
 
