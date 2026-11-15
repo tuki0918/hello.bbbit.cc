@@ -388,27 +388,28 @@ body {
   z-index: 2;
   pointer-events: none;
 }
+.callout-dot {
+  position: absolute;
+  left: 0.1em;
+  bottom: 0;
+  width: 0.4em;
+  height: 0.4em;
+  background: var(--cyan);
+  opacity: 0;
+  /* Above the diagonal line, which itself is above the card. */
+  z-index: 1;
+}
 .callout svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  left: 0;
   overflow: visible;
 }
-.callout path {
-  fill: none;
-  stroke: var(--ink);
-  /* In viewBox units (0.1em), about 1px. */
-  stroke-width: 0.7;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.15s ease-in;
+.callout-diag {
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
-.callout rect {
-  fill: var(--cyan);
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-/* Starts where the diagonal ends; its underline is the horizontal line. */
+/* Starts where the diagonal ends; the rule along its bottom is the horizontal line. */
 .callout-label {
   position: absolute;
   left: 100%;
@@ -416,17 +417,18 @@ body {
   padding-bottom: 0.4em;
   white-space: nowrap;
 }
-.callout-label::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.035em;
-  height: 0.07em;
-  background: var(--ink);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.15s ease-in;
+/* An SVG with no height draws nothing, so give it 2px and centre the line in it. */
+.callout-rule {
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+}
+/* Both lines are the same SVG stroke, so they are the same weight. */
+.callout line {
+  stroke: var(--ink);
+  stroke-width: 1.2px;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
 }
 .callout-text {
   display: block;
@@ -439,27 +441,42 @@ body {
   color: var(--ink);
   opacity: 0;
   transform: translateY(0.3em);
-  transition:
-    opacity 0.15s,
-    transform 0.15s;
 }
-/* Diagonal first, then the horizontal line, then the label. */
-.scene.hinting[data-view="cover"] .callout path {
+
+/* Hiding runs the reveal backwards: label, horizontal line, diagonal, dot. */
+.callout-text {
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+}
+.callout-rule line {
+  transition: stroke-dashoffset 0.3s ease-in 0.2s;
+}
+.callout-diag line {
+  transition: stroke-dashoffset 0.25s ease-in 0.5s;
+}
+.callout-dot {
+  transition: opacity 0.15s 0.75s;
+}
+
+/* Revealing: dot, diagonal, horizontal line, label. */
+.scene.hinting[data-view="cover"] .callout-dot {
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+.scene.hinting[data-view="cover"] .callout-diag line {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.25s ease-out;
 }
-.scene.hinting[data-view="cover"] .callout rect {
-  opacity: 1;
-}
-.scene.hinting[data-view="cover"] .callout-label::after {
-  transform: none;
-  transition: transform 0.3s ease-out 0.25s;
+.scene.hinting[data-view="cover"] .callout-rule line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.3s ease-out 0.25s;
 }
 .scene.hinting[data-view="cover"] .callout-text {
   opacity: 1;
   transform: none;
   transition-duration: 0.3s;
-  transition-delay: 0.45s;
+  transition-delay: 0.5s;
 }
 
 /* ---------- Controls ---------- */
@@ -545,12 +562,13 @@ body {
   .book,
   .flap,
   .shadow,
-  .callout path,
-  .callout rect,
-  .callout-label::after,
-  .callout-text,
   .actions,
   .tilt {
     transition-duration: 0.01s;
+  }
+  .callout line,
+  .callout-dot,
+  .callout-text {
+    transition: none !important;
   }
 }

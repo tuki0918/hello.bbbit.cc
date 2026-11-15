@@ -110,13 +110,14 @@
 
         <!-- 表紙のときだけ、カードから線が伸びて出る案内。PCではホバー中、スマホでは最初のタップまで表示。 -->
         <div class="callout" aria-hidden="true">
-          <!-- 1 unit = 0.1em。カード上辺は y=22。斜め線は右上へ1マス分(2.2em)伸びる。 -->
-          <svg viewBox="0 0 27 26">
-            <path d="M3 24 27 0" pathLength="1" />
-            <rect x="1" y="22" width="4" height="4" />
-          </svg>
-          <!-- 横線はこの要素の下線なので、長さは文字の幅と同じになる。 -->
-          <span class="callout-label"><span class="callout-text">タップでひらく</span></span>
+          <span class="callout-dot"></span>
+          <!-- 斜め線: 点の中心から右上へ1マス分(2.2em)。横線と同じ線種・同じ太さ。 -->
+          <svg class="callout-diag"><line x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
+          <span class="callout-label">
+            <span class="callout-text">タップでひらく</span>
+            <!-- 横線: この要素の幅いっぱいなので、長さは文字の幅と同じになる。 -->
+            <svg class="callout-rule"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
+          </span>
         </div>
       </div>
 
