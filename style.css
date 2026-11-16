@@ -199,6 +199,11 @@ body {
   visibility: hidden;
   transition: visibility 0s 0.2s;
 }
+/* Folded shut, the inside is switched off too, once the flap has come down over it. */
+.scene[data-view="cover"] .inner {
+  visibility: hidden;
+  transition: visibility 0s 0.9s;
+}
 
 .corner {
   position: absolute;
@@ -648,8 +653,12 @@ body {
 .like.full .tile-thumb {
   fill: color-mix(in srgb, var(--hue) 35%, transparent);
 }
-.like:hover .tile {
-  filter: brightness(1.3);
+/* Only where a pointer can really hover: on touch screens the hover state sticks to
+   the last thumb tapped, and its filter layer can show through the closed card. */
+@media (hover: hover) {
+  .like:hover .tile {
+    filter: brightness(1.3);
+  }
 }
 .like:focus-visible {
   outline: none;
@@ -699,8 +708,10 @@ body {
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
-  /* Until the first tap, a ring ripples off the first thumb to say it can be pressed. */
-  .flow:not(.liked) .like[data-like="0"] .tile::after {
+  /* Until the first tap, a ring ripples off the first thumb to say it can be pressed.
+     Only while the card is open: an animated layer can show through the faces that
+     cover it, so the ring must be gone the moment the card starts to turn. */
+  .scene[data-view="open"] .flow:not(.liked) .like[data-like="0"] .tile::after {
     content: "";
     position: absolute;
     inset: -1px;
