@@ -51,6 +51,77 @@ body {
   overflow-x: clip;
 }
 
+/* ---------- Backdrop ---------- */
+/* The desk the card lies on: soft glows, the card's own grid carried out across
+   the page, and a few lit cells ("bits") like the square in the logo. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* One cell is the card's cell (2.2em = a tenth of its width), so the page's
+     vertical lines run into the card's edges. */
+  --cell: calc(var(--w) / 10);
+}
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background:
+    radial-gradient(38vmax 38vmax at 18% 24%, rgb(22 190 208 / 14%), transparent 70%),
+    radial-gradient(30vmax 30vmax at 78% 14%, rgb(22 190 208 / 8%), transparent 70%),
+    radial-gradient(46vmax 46vmax at 84% 82%, rgb(13 33 64 / 10%), transparent 70%);
+}
+.backdrop-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(7 20 40 / 5.5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(7 20 40 / 5.5%) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  /* A line through the centre both ways; the bits below count cells from there. */
+  background-position: calc(50% + var(--cell) / 2) calc(50% + var(--cell) / 2);
+  -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 30%, transparent 100%);
+}
+/* --x / --y: which cell, counted from the centre of the page. */
+.bit {
+  position: absolute;
+  left: calc(50% + var(--x) * var(--cell) + 1px);
+  top: calc(50% + var(--y) * var(--cell) + 1px);
+  width: calc(var(--cell) - 1px);
+  height: calc(var(--cell) - 1px);
+  background: var(--cyan);
+  opacity: var(--o, 0.3);
+}
+.bit-navy {
+  background: var(--navy);
+}
+.bit-line {
+  background: none;
+  box-shadow: inset 0 0 0 1px rgb(7 20 40 / 16%);
+  --o: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .backdrop::before {
+    animation: backdrop-drift 26s ease-in-out infinite alternate;
+  }
+  .bit {
+    animation: bit-blink var(--t, 7s) ease-in-out var(--d, 0s) infinite;
+  }
+}
+@keyframes backdrop-drift {
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+  }
+}
+@keyframes bit-blink {
+  50% {
+    opacity: calc(var(--o, 0.3) * 0.15);
+  }
+}
+
 .stage {
   min-height: 100dvh;
   display: flex;

@@ -36,6 +36,25 @@
     <title>bbbit｜PROFILE</title>
   </head>
   <body>
+    <!-- 背景: 名刺と同じマス目と、ロゴの四角のように灯るマス。--x / --y は画面中央から数えたマスの位置。 -->
+    <div class="backdrop" aria-hidden="true">
+      <div class="backdrop-grid">
+        <span class="bit" style="--x: -9; --y: -4; --o: 0.45; --t: 6s"></span>
+        <span class="bit" style="--x: -12; --y: -1; --o: 0.22; --t: 9s; --d: -3s"></span>
+        <span class="bit bit-line" style="--x: -7; --y: 2; --t: 8s; --d: -5s"></span>
+        <span class="bit bit-navy" style="--x: -8; --y: 5; --o: 0.07; --t: 10s; --d: -2s"></span>
+        <span class="bit bit-line" style="--x: -6; --y: -7; --t: 11s; --d: -7s"></span>
+        <span class="bit" style="--x: -4; --y: -8; --o: 0.3; --t: 7s; --d: -4s"></span>
+        <span class="bit bit-line" style="--x: 1; --y: -9; --t: 9s; --d: -1s"></span>
+        <span class="bit" style="--x: 8; --y: -6; --o: 0.28; --t: 8s; --d: -6s"></span>
+        <span class="bit bit-navy" style="--x: 6; --y: -3; --o: 0.07; --t: 12s; --d: -8s"></span>
+        <span class="bit" style="--x: 9; --y: 1; --o: 0.4; --t: 7s; --d: -2.5s"></span>
+        <span class="bit" style="--x: 11; --y: 4; --o: 0.2; --t: 10s; --d: -5.5s"></span>
+        <span class="bit bit-line" style="--x: 6; --y: 5; --t: 8s; --d: -3.5s"></span>
+        <span class="bit" style="--x: 3; --y: 8; --o: 0.3; --t: 9s; --d: -6.5s"></span>
+        <span class="bit bit-line" style="--x: -4; --y: 8; --t: 7s; --d: -1.5s"></span>
+      </div>
+    </div>
     <main class="stage">
       <!-- 言語の切り替え。押すたびに日本語 ⇄ English。ラベルはいま表示している言語を示す。 -->
       <button type="button" class="language-toggle" hidden>
