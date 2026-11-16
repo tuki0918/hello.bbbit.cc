@@ -1,9 +1,0 @@
-BEGIN:VCARD
-VERSION:3.0
-N:Yamamoto;Yuta;;;
-FN:Yuta Yamamoto
-ORG:bbbit
-EMAIL;TYPE=INTERNET,WORK:hello@bbbit.cc
-URL:https://hello.bbbit.cc
-NOTE:ITで困りごとを解決 ── 身近な不便を、便利に変えよう。
-END:VCARD
