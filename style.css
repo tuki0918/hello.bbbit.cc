@@ -1,3 +1,16 @@
+@font-face {
+  font-family: Manrope;
+  src: url("fonts/manrope.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("fonts/space-grotesk.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
 /* Colors follow bbbit.cc (navy #071428, cyan #16BED0). English text uses --font-en. */
 :root {
   color-scheme: only light;
@@ -59,7 +72,6 @@ body {
   perspective: 1400px;
   /* All inner sizes are in em so the card scales as one piece. */
   font-size: calc(var(--w) / 22);
-  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .tilt {
   width: 100%;
@@ -885,17 +897,7 @@ body {
   }
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(28px) rotate(-3deg) scale(0.94);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .scene {
-    animation: none;
-  }
   .book,
   .flap,
   .shadow,

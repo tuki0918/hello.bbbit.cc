@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "build": "sh build.sh"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

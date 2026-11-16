@@ -4,10 +4,6 @@
   const tilt = document.getElementById("tilt");
   const root = document.documentElement;
 
-  // The URL the QR code points at: <meta name="card-url">, or this page itself.
-  const configured = document.querySelector('meta[name="card-url"]').content.trim();
-  const cardUrl = configured || location.origin + location.pathname;
-
   /* ---------- Views: cover -> open (inside spread) -> back ---------- */
   const ORDER = ["cover", "open", "back"];
   // Which faces can be seen (and so focused) in each view.
@@ -23,16 +19,16 @@
   // Cover the inside with grid cells and uncover them in a zigzag the first time
   // the card opens (same idea as the laser-reveal-effect library, without React).
   const REVEAL = { cols: 10, rows: 6, start: 0.15, sweep: 0.7, cell: 0.12 };
-  const revealLayers = [];
-  let revealState = "ready"; // ready -> running -> done
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let revealStarted = false;
 
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    revealState = "done";
-  } else {
+  function startReveal() {
+    if (reduceMotion || revealStarted) return;
+    revealStarted = true;
     // The sweep runs from the top edge down. The top panel is the back of the flap, so
     // it only comes into view once the flap swings past halfway (about 0.15s in);
     // the sweep waits just that long.
-    ["inner-top", "inner-bottom"].forEach((id, panel) => {
+    const revealLayers = ["inner-top", "inner-bottom"].map((id, panel) => {
       const layer = document.createElement("div");
       layer.className = "reveal";
       layer.setAttribute("aria-hidden", "true");
@@ -53,24 +49,19 @@
         }
       }
       document.getElementById(id).append(layer);
-      revealLayers.push(layer);
+      return layer;
     });
-  }
-
-  function startReveal() {
-    if (revealState !== "ready") return;
-    revealState = "running";
     scene.classList.add("revealing");
     const total = (REVEAL.start + REVEAL.sweep + REVEAL.cell) * 1000;
     setTimeout(() => {
       for (const layer of revealLayers) layer.remove();
       scene.classList.remove("revealing");
-      revealState = "done";
     }, total + 100);
   }
 
   function setView(next) {
     if (next === "open") startReveal();
+    if (next !== "cover") prepareQr();
     view = next;
     scene.dataset.view = view;
     for (const face of faces) face.inert = !VISIBLE[view].includes(face.id);
@@ -96,13 +87,13 @@
   if (matchMedia("(hover: hover)").matches) {
     // The book element is as tall as the opened card; only the paper itself counts.
     book.addEventListener("pointerover", (event) => {
-      if (event.target.closest(".panel")) scene.classList.add("hinting");
+      if (event.target.closest(".panel")) showHint();
     });
     book.addEventListener("pointerout", (event) => {
       const to = event.relatedTarget;
       if (!(to instanceof Element && to.closest(".panel"))) scene.classList.remove("hinting");
     });
-    book.addEventListener("focus", () => scene.classList.add("hinting"));
+    book.addEventListener("focus", showHint);
     book.addEventListener("blur", () => scene.classList.remove("hinting"));
   } else {
     scene.classList.add("hinting");
@@ -110,7 +101,6 @@
   }
 
   /* ---------- Tilt + glare (mouse / pen only) ---------- */
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!reduceMotion) {
     scene.addEventListener("pointermove", (event) => {
       if (event.pointerType === "touch") return;
@@ -146,6 +136,11 @@
   let trackUntil = 0;
   let tracking = false;
 
+  function showHint() {
+    scene.classList.add("hinting");
+    wakeTracking();
+  }
+
   function track(now) {
     for (const { forView, box, anchor, dot, line } of trackers) {
       if (view !== forView) continue;
@@ -163,6 +158,7 @@
   // Keep tracking for a moment after the last movement so the tilt (and the flap,
   // after a tap) can settle.
   function wakeTracking() {
+    if (view !== "cover" || !scene.classList.contains("hinting")) return;
     trackUntil = performance.now() + 1500;
     if (!tracking) {
       tracking = true;
@@ -173,24 +169,41 @@
   scene.addEventListener("pointerleave", wakeTracking);
   book.addEventListener("click", wakeTracking);
   addEventListener("resize", wakeTracking);
-  wakeTracking();
-
   /* ---------- QR code ---------- */
-  const NAVY = "#071428";
-  const QUIET = 2; // quiet-zone modules around the code
-  const qr = qrcode(0, "M");
-  qr.addData(cardUrl);
-  qr.make();
-  const count = qr.getModuleCount();
-  const size = count + QUIET * 2;
-
-  let path = "";
-  for (let row = 0; row < count; row++) {
-    for (let col = 0; col < count; col++) {
-      if (qr.isDark(row, col)) path += `M${col + QUIET} ${row + QUIET}h1v1h-1z`;
-    }
+  let qrRequested = false;
+  function prepareQr() {
+    if (qrRequested) return;
+    qrRequested = true;
+    // Start one face early so the code is ready when the back turns into view.
+    const script = document.createElement("script");
+    script.src = "vendor/qrcode.js";
+    script.onload = renderQr;
+    script.onerror = () => {
+      script.remove();
+      qrRequested = false;
+    };
+    document.head.append(script);
   }
-  document.getElementById("qr").innerHTML =
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">` +
-    `<rect width="${size}" height="${size}" fill="#fff"/><path d="${path}" fill="${NAVY}"/></svg>`;
+
+  function renderQr() {
+    const configured = document.querySelector('meta[name="card-url"]').content.trim();
+    const cardUrl = configured || location.origin + location.pathname;
+    const NAVY = "#071428";
+    const QUIET = 2; // quiet-zone modules around the code
+    const qr = qrcode(0, "M");
+    qr.addData(cardUrl);
+    qr.make();
+    const count = qr.getModuleCount();
+    const size = count + QUIET * 2;
+
+    let path = "";
+    for (let row = 0; row < count; row++) {
+      for (let col = 0; col < count; col++) {
+        if (qr.isDark(row, col)) path += `M${col + QUIET} ${row + QUIET}h1v1h-1z`;
+      }
+    }
+    document.getElementById("qr").innerHTML =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">` +
+      `<rect width="${size}" height="${size}" fill="#fff"/><path d="${path}" fill="${NAVY}"/></svg>`;
+  }
 })();

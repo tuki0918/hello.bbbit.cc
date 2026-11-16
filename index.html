@@ -21,13 +21,8 @@
     <meta property="og:image:alt" content="bbbit — 身近な不便を、便利に変えよう。" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&amp;family=Space+Grotesk:wght@400..700&amp;display=swap"
-    />
     <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
     <title>Yuta Yamamoto — bbbit</title>
   </head>
   <body>
@@ -115,7 +110,7 @@
                 <div class="grid grid-light" aria-hidden="true"></div>
                 <!-- 上段: だれか（アイコン・名前・肩書き） -->
                 <div class="id-row">
-                  <img class="avatar" src="avatar.webp" alt="" width="216" height="228" />
+                  <img class="avatar" src="avatar-84.webp" srcset="avatar-84.webp 1x, avatar.webp 2x" alt="" width="216" height="228" decoding="async" fetchpriority="low" />
                   <div class="inner-id">
                     <h1 class="inner-name">Yuta Yamamoto</h1>
                     <p class="inner-role">Software Engineer</p>
@@ -194,7 +189,5 @@
       </nav>
     </main>
 
-    <script src="vendor/qrcode.js"></script>
-    <script src="main.js"></script>
   </body>
 </html>
