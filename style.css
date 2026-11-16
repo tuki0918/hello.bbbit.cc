@@ -839,9 +839,15 @@ body {
 }
 
 /* ---------- Controls ---------- */
-/* The button only appears once the card has been opened; on the cover and the back
-   it is hidden (and out of the tab order), with its space kept so nothing jumps. */
+/* The two buttons only appear while the card is open; on the cover and the back
+   they are hidden (and out of the tab order), with their space kept so nothing
+   jumps. They sit side by side, each as wide as the widest one. */
 .actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 10px;
+  width: max-content;
   margin-top: calc(14px + var(--w) * 0.08);
   transition:
     opacity 0.4s ease-out 0.45s,
@@ -857,21 +863,13 @@ body {
     transform 0.15s,
     visibility 0s 0.15s;
 }
-/* The buttons sit side by side, each as wide as the widest one. */
-.actions {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  width: max-content;
-  gap: 10px;
-}
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   min-height: 44px;
-  padding: 0 12px;
+  padding: 0 18px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--btn-bg);
@@ -901,35 +899,22 @@ body {
 .btn:active {
   transform: scale(0.96);
 }
-.btn.primary {
-  border-color: var(--navy);
-  background: var(--navy);
-  color: #fff;
-}
-@media (prefers-color-scheme: dark) {
-  .btn.primary {
-    border-color: var(--cyan);
-    background: var(--cyan);
-    color: var(--navy);
-  }
-}
-/* The site button is the quiet sibling of the contact button: same shape, a pale
-   tint of the same navy instead of the solid fill, and no outline. */
-.btn.site-link {
+/* Both buttons are quiet: a pale tint of the card's navy, no outline, so the
+   strongest colour on the page stays inside the card. */
+.actions .btn {
   border-color: transparent;
   background: rgb(7 20 40 / 8%);
   color: var(--navy);
 }
-.btn.site-link:hover {
-  border-color: transparent;
+.actions .btn:hover {
   background: rgb(7 20 40 / 14%);
 }
 @media (prefers-color-scheme: dark) {
-  .btn.site-link {
+  .actions .btn {
     background: rgb(255 255 255 / 12%);
     color: #e7e9ec;
   }
-  .btn.site-link:hover {
+  .actions .btn:hover {
     background: rgb(255 255 255 / 18%);
   }
 }
