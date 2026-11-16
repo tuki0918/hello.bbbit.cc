@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      共有したときのサムネイル画像 og.png（1200 × 630）の元。名刺の表紙と同じ見た目で組んである。
+      書き出し（プロジェクトのフォルダで実行）:
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+          --force-device-scale-factor=1 --window-size=1200,630 \
+          --screenshot="$PWD/og.png" "file://$PWD/og/og-image.html"
+    -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+      }
+      body {
+        --navy: #071428;
+        --cyan: #16bed0;
+        /* マス目1つ = 90px。右上のシアンの四角もちょうど1マス。 */
+        --cell: 90px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 44px;
+        background: linear-gradient(160deg, #0d2140 0%, var(--navy) 55%, #040c19 100%);
+        color: #fff;
+        font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+      }
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px),
+          linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px);
+        background-size: var(--cell) var(--cell);
+        background-position: right top;
+        -webkit-mask-image: linear-gradient(225deg, #000 5%, transparent 70%);
+        mask-image: linear-gradient(225deg, #000 5%, transparent 70%);
+      }
+      .corner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: var(--cell);
+        height: var(--cell);
+        background: var(--cyan);
+      }
+      /* LINE などは中央を正方形に切り抜くことがあるので、要素は中央 630px の内側に収める。 */
+      .logo {
+        position: relative;
+        width: 430px;
+        height: auto;
+      }
+      .catch {
+        position: relative;
+        margin: 0;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: rgb(255 255 255 / 88%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid"></div>
+    <span class="corner"></span>
+    <svg class="logo" viewBox="0 0 164 52" fill="none">
+      <g fill="#fff" transform="translate(2 2)">
+        <path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" />
+        <path fill-rule="evenodd" d="M39 0h9v14h23v34H39V0Zm9 23v16h14V23H48Z" />
+        <path fill-rule="evenodd" d="M78 0h9v14h23v34H78V0Zm9 23v16h14V23H87Z" />
+        <path d="M117 14h9v34h-9zM140 0h9v14h11v9h-11v16h11v9h-20V23h-8v-9h8V0Z" />
+      </g>
+      <path fill="#16BED0" d="M119 2h9v9h-9z" />
+    </svg>
+    <p class="catch">身近な不便を、便利に変えよう。</p>
+  </body>
+</html>
