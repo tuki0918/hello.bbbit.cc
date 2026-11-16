@@ -340,11 +340,38 @@ body {
 }
 .inner-bio {
   margin: 0.9em 0 0;
-  font-size: 0.6em;
+  font-size: 0.54em;
   font-weight: 500;
   line-height: 1.6;
   white-space: nowrap;
   color: #4a5769;
+}
+/* Where he is based: a plate under the avatar, as wide as the avatar tile and on
+   the same grey, in the same small caps as the title. The space around the letters
+   is the same on all four sides (--pad), measured from the capitals themselves:
+   their tops sit 0.1em below the line box and their feet 0.2em above its bottom. */
+.base-in {
+  --pad: 0.37em;
+  position: absolute;
+  left: 0;
+  width: 4.4em;
+  margin: 0;
+  background: #eef1f4;
+  font-family: var(--font-en);
+  font-weight: 500;
+  text-align: center;
+  color: #5d6b7e;
+}
+.base-in span {
+  display: block;
+  /* 0.58em type: the paddings below are card ems divided by 0.58. */
+  font-size: 0.58em;
+  line-height: 1;
+  padding: calc(var(--pad) / 0.58 - 0.1em) 0 calc(var(--pad) / 0.58 - 0.2em);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* Letter-spacing trails the last letter; pull it back so the word is centred. */
+  text-indent: 0.12em;
 }
 /* Social links: bare icons on the right, each padded for an easier tap. */
 .socials {
