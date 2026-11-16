@@ -33,11 +33,24 @@
         <div class="tilt" id="tilt">
           <div class="book" id="book" role="button" tabindex="0" aria-label="名刺をめくる">
             <div class="panel base">
+              <!-- 公式サイトの案内線の起点。位置は style.css で画面幅に応じて決める。 -->
+              <span class="callout-anchor callout-anchor-site" id="callout-site-anchor" aria-hidden="true"></span>
               <!-- 中面（下） -->
               <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" inert>
                 <div class="grid" aria-hidden="true"></div>
                 <!-- bbbit.cc の About から。 -->
-                <h2 class="about-head">What is bbbit<span>?</span></h2>
+                <h2 class="about-head">
+                  What is
+                  <svg viewBox="0 0 164 52" fill="none" role="img" aria-label="bbbit">
+                    <g fill="currentColor" transform="translate(2 2)">
+                      <path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" />
+                      <path fill-rule="evenodd" d="M39 0h9v14h23v34H39V0Zm9 23v16h14V23H48Z" />
+                      <path fill-rule="evenodd" d="M78 0h9v14h23v34H78V0Zm9 23v16h14V23H87Z" />
+                      <path d="M117 14h9v34h-9zM140 0h9v14h11v9h-11v16h11v9h-20V23h-8v-9h8V0Z" />
+                    </g>
+                    <path fill="#16BED0" d="M119 2h9v9h-9z" />
+                  </svg><span>?</span>
+                </h2>
                 <p class="about-lead">
                   bbbit（ビビビット）は、ITやAIを活かして、<br />身近な<mark>「不便」</mark>の解消に取り組んでいます。
                 </p>
@@ -95,15 +108,33 @@
               <!-- 中面（上） -->
               <section class="face inner inner-top" id="inner-top" aria-label="中面 プロフィール" inert>
                 <span class="corner" aria-hidden="true"></span>
-                <img class="avatar" src="avatar.webp" alt="" width="216" height="228" />
-                <div class="inner-id">
-                  <h1 class="inner-name">Yuta Yamamoto</h1>
-                  <p class="inner-role">Software Engineer<br />Indie Developer</p>
-                  <!-- GitHub・X・YouTube・Mail。X と YouTube は未開設なので、bbbit.cc と同じく薄い表示でリンクなし。 -->
+                <div class="grid grid-light" aria-hidden="true"></div>
+                <!-- 上段: だれか（アイコン・名前・肩書き） -->
+                <div class="id-row">
+                  <img class="avatar" src="avatar.webp" alt="" width="216" height="228" />
+                  <div class="inner-id">
+                    <h1 class="inner-name">Yuta Yamamoto</h1>
+                    <p class="inner-role">Software Engineer</p>
+                    <p class="inner-bio">和歌山市を拠点に、個人でアプリやツールを<br />設計・開発しています。</p>
+                  </div>
+                </div>
+                <!-- 下段: SNS（右寄せ）。 -->
+                <div class="id-foot">
+                  <!-- bbbit.cc の About と同じ並び。X と YouTube は未開設なので、薄い表示でリンクなし。 -->
                   <ul class="socials">
                     <li>
                       <a href="https://github.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://zenn.dev/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="Zenn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.264 23.771h4.984c.264 0 .498-.147.645-.352L19.614.874c.176-.293-.029-.645-.381-.645h-4.72c-.235 0-.44.117-.557.323L.03 23.361c-.088.176.029.41.234.41zM17.445 23.419l6.479-10.408c.205-.323-.029-.733-.41-.733h-4.691c-.176 0-.352.088-.44.235l-6.655 10.643c-.176.264.029.616.352.616h4.779c.234-.001.468-.118.586-.353z" /></svg>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://note.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="note">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 .279c4.623 0 10.953-.235 15.498-.117 6.099.156 8.39 2.813 8.468 9.374.077 3.71 0 14.335 0 14.335h-6.598c0-9.296.04-10.83 0-13.759-.078-2.578-.814-3.807-2.795-4.041-2.097-.235-7.975-.04-7.975-.04v17.84H0Z" /></svg>
                       </a>
                     </li>
                     <li>
@@ -130,7 +161,7 @@
         <div class="shadow" aria-hidden="true"></div>
 
         <!-- 表紙のときだけ、カードから線が伸びて出る案内。PCではホバー中、スマホでは最初のタップまで表示。 -->
-        <div class="callout" id="callout" aria-hidden="true">
+        <div class="callout callout-tap" id="callout" aria-hidden="true">
           <span class="callout-dot" id="callout-dot"></span>
           <!-- 斜め線: 点の中心から右上へ1マス分(2.2em)。横線と同じ線種・同じ太さ。 -->
           <svg class="callout-diag"><line id="callout-diag-line" x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
@@ -140,9 +171,29 @@
             <svg class="callout-rule"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
           </span>
         </div>
+
+        <!-- 幅に余裕のある画面だけ: 開いて下の面にホバーすると、右辺（上から1.5マス）から
+             線が右へ伸びて公式サイトへのリンクが出る。ホバーのない端末では開いている間ずっと出す。
+             スマホなど狭い画面では出さず、「連絡先に追加」の上のリンクで代える。 -->
+        <div class="callout callout-site" id="callout-site">
+          <span class="callout-dot" id="callout-site-dot" aria-hidden="true"></span>
+          <svg class="callout-diag" aria-hidden="true"><line id="callout-site-line" x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
+          <span class="callout-label">
+            <a class="callout-text" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
+              bbbit.cc
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
+            </a>
+            <svg class="callout-rule" aria-hidden="true"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
+          </span>
+        </div>
       </div>
 
       <nav class="actions" aria-label="操作">
+        <!-- 狭い画面で、名刺の横の案内線の代わりに出す公式サイトへのリンク。 -->
+        <a class="site-link" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
+          bbbit.cc
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
+        </a>
         <a class="btn primary" href="yuta-yamamoto.vcf" download="yuta-yamamoto.vcf">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 8v6M16 11h6" /></svg>
           連絡先に追加

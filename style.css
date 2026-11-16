@@ -282,64 +282,83 @@ body {
   top: 0;
   background: linear-gradient(rgb(7 20 40 / 9%), transparent);
 }
-/* Same layout as the back: one grid cell of margin, a three-cell tile on the left,
-   one cell of gap, then the text. */
+/* Upper panel: who (avatar, name, title) above a rule, then where to find them
+   (site on the left, social icons on the right), like the lower panel's last row.
+   One grid cell of margin left and right; the avatar tile is two cells square. */
 .inner-top {
-  flex-direction: row;
-  align-items: center;
-  gap: 2.2em;
+  justify-content: center;
   padding: 0 2.2em;
+}
+.grid-light {
+  background-image:
+    linear-gradient(rgb(7 20 40 / 5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(7 20 40 / 5%) 1px, transparent 1px);
+}
+.id-row,
+.id-foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.id-row {
+  gap: 1.3em;
 }
 .avatar {
   flex: none;
-  width: 6.6em;
-  height: 6.6em;
+  width: 4.4em;
+  height: 4.4em;
   background: #eef1f4;
   /* The drawing is a bust: keep it whole and standing on the tile's bottom edge. */
   object-fit: contain;
   object-position: 50% 100%;
-  padding-top: 0.5em;
+  padding-top: 0.35em;
 }
-/* The text column is exactly as tall as the avatar tile: the name sits on its top
-   edge and the social icons on its bottom edge (as on the back, beside the QR). */
-.inner-id {
-  height: 6.6em;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.id-foot {
+  justify-content: flex-end;
+  margin-top: 1.2em;
+  padding-top: 1.1em;
+  border-top: 1px solid rgb(7 20 40 / 14%);
 }
 .inner-name {
   margin: 0;
   font-family: var(--font-en);
-  font-size: 1.2em;
+  font-size: 1.6em;
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   white-space: nowrap;
 }
 .inner-role {
-  margin: 0.9em 0 0;
+  margin: 0.75em 0 0;
   font-family: var(--font-en);
-  font-size: 0.62em;
+  font-size: 0.64em;
   font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.12em;
+  line-height: 1;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #0c8a98;
 }
-/* Social links: bare icons. Each link is padded for an easier tap, and the row is
-   pulled back by the same amount so the icons stay flush with the text above. */
+.inner-bio {
+  margin: 0.9em 0 0;
+  font-size: 0.6em;
+  font-weight: 500;
+  line-height: 1.6;
+  white-space: nowrap;
+  color: #4a5769;
+}
+/* Social links: bare icons on the right, each padded for an easier tap. */
 .socials {
   display: flex;
-  gap: 0.3em;
+  gap: 0.15em;
   list-style: none;
-  margin: auto 0 -0.5em -0.5em;
+  /* Pulled out by the links' padding so the last icon is flush with the right margin. */
+  margin: -0.35em -0.35em -0.35em 0;
   padding: 0;
 }
 .socials a,
 .social-off {
   display: block;
-  padding: 0.5em;
+  padding: 0.35em;
   color: var(--navy);
 }
 /* Not opened yet: shown faint, not a link. */
@@ -348,8 +367,8 @@ body {
 }
 .socials svg {
   display: block;
-  width: 1.1em;
-  height: 1.1em;
+  width: 1em;
+  height: 1em;
   fill: currentColor;
 }
 .socials .line {
@@ -394,8 +413,21 @@ body {
   letter-spacing: -0.01em;
   color: #fff;
 }
+.about-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.32em;
+}
+/* The logo stands in for the word "bbbit", sized to the text's ascender height. */
+.about-head svg {
+  display: block;
+  height: 0.86em;
+  width: auto;
+  /* The artwork has a little padding below the letters; sit it on the baseline. */
+  transform: translateY(0.03em);
+}
 .about-head span {
-  margin-left: 0.08em;
+  margin-left: -0.2em;
   color: var(--cyan);
 }
 .about-lead {
@@ -701,28 +733,103 @@ body {
 .callout {
   transition: opacity 0.1s;
 }
-.scene:not([data-view="cover"]) .callout {
+.scene:not([data-view="cover"]) .callout-tap {
   opacity: 0;
 }
 
-/* Revealing: dot, diagonal, horizontal line, label. */
-.scene.hinting[data-view="cover"] .callout-dot {
+/* Revealing "tap to open" on the cover: dot, diagonal, horizontal line, label. */
+.scene.hinting[data-view="cover"] .callout-tap .callout-dot {
   opacity: 1;
   transition: opacity 0.15s;
 }
-.scene.hinting[data-view="cover"] .callout-diag line {
+.scene.hinting[data-view="cover"] .callout-tap .callout-diag line {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.25s ease-out;
 }
-.scene.hinting[data-view="cover"] .callout-rule line {
+.scene.hinting[data-view="cover"] .callout-tap .callout-rule line {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.3s ease-out 0.25s;
 }
-.scene.hinting[data-view="cover"] .callout-text {
+.scene.hinting[data-view="cover"] .callout-tap .callout-text {
   opacity: 1;
   transform: none;
   transition-duration: 0.3s;
   transition-delay: 0.5s;
+}
+
+/* Site callout: the same leader line carrying the link to bbbit.cc. It leaves the
+   lower panel's right edge one and a half cells (3.3em) below the fold and runs
+   up-right, exactly like the "tap to open" callout. Shown while the card is open and
+   the pointer is over the lower panel (main.js sets .site-hinting; on touch screens
+   it is set whenever the card is open). Screens too narrow to have room beside the
+   card do not get it; they get .site-link above the button instead. */
+.callout-site {
+  left: 21.5em;
+  top: calc(50% + 0.9em);
+  bottom: auto;
+}
+.callout-anchor-site {
+  right: 0.2em;
+  top: 3.3em;
+}
+.callout-site .callout-text {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-family: var(--font-en);
+  letter-spacing: 0.06em;
+  margin-right: 0;
+  text-decoration: none;
+}
+.callout-site .callout-text svg {
+  position: static;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.callout-site .callout-text:hover {
+  color: #0c8a98;
+}
+@media (max-width: 719.98px) {
+  .callout-site {
+    display: none;
+  }
+}
+.scene:not([data-view="open"]) .callout-site {
+  opacity: 0;
+  visibility: hidden;
+}
+/* On touch screens it appears by itself, so wait for the flap to settle. */
+.callout-site {
+  --wait: 0s;
+}
+@media (hover: none) {
+  .callout-site {
+    --wait: 0.7s;
+  }
+}
+.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-dot {
+  opacity: 1;
+  transition: opacity 0.15s var(--wait);
+}
+.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-diag line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.25s ease-out var(--wait);
+}
+.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-rule line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.3s ease-out calc(var(--wait) + 0.25s);
+}
+.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-text {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-duration: 0.3s;
+  transition-delay: calc(var(--wait) + 0.5s);
 }
 
 /* ---------- Controls ---------- */
@@ -746,9 +853,44 @@ body {
 }
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+/* Narrow screens: the link to the site sits above the button, in place of the
+   callout beside the card. */
+.site-link {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  color: var(--ink);
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: underline;
+  text-decoration-color: var(--cyan);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.site-link svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (max-width: 719.98px) {
+  .site-link {
+    display: inline-flex;
+  }
+  /* Make room for it without pushing the button further from the card. */
+  .actions {
+    margin-top: 16px;
+  }
 }
 .btn {
   display: inline-flex;
@@ -798,6 +940,8 @@ body {
   }
 }
 .btn:focus-visible,
+.site-link:focus-visible,
+.callout-site a:focus-visible,
 .socials a:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;

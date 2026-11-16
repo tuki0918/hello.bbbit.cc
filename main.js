@@ -133,31 +133,60 @@
     });
   }
 
-  /* ---------- Callout start point follows the card ---------- */
-  // The label and the horizontal line stay put; the dot and the start of the
-  // diagonal are moved each frame onto a marker that tilts with the card.
-  const callout = document.getElementById("callout");
-  const anchor = document.getElementById("callout-anchor");
-  const dot = document.getElementById("callout-dot");
-  const diagLine = document.getElementById("callout-diag-line");
+  /* ---------- Site callout: while the pointer is over the lower panel ---------- */
+  const siteCallout = document.getElementById("callout-site");
+  if (matchMedia("(hover: hover)").matches) {
+    // The link sits beside the card, so leaving the panel must not hide it before
+    // the pointer can get there: hiding waits a moment and is cancelled on arrival.
+    let hideTimer = 0;
+    const show = () => {
+      clearTimeout(hideTimer);
+      scene.classList.add("site-hinting");
+    };
+    const hideSoon = () => {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => scene.classList.remove("site-hinting"), 500);
+    };
+    const base = document.querySelector(".base");
+    base.addEventListener("pointerenter", show);
+    base.addEventListener("pointerleave", hideSoon);
+    const link = siteCallout.querySelector("a");
+    link.addEventListener("pointerenter", show);
+    link.addEventListener("pointerleave", hideSoon);
+  } else {
+    scene.classList.add("site-hinting");
+  }
+
+  /* ---------- Callout start points follow the card ---------- */
+  // The labels and horizontal lines stay put; each dot and the start of its diagonal
+  // are moved every frame onto a marker that tilts with the card. Each callout only
+  // tracks in its own view, so a start point never rides the flap while it swings.
+  const trackers = [
+    { view: "cover", ids: ["callout", "callout-anchor", "callout-dot", "callout-diag-line"] },
+    { view: "open", ids: ["callout-site", "callout-site-anchor", "callout-site-dot", "callout-site-line"] },
+  ].map(({ view: forView, ids }) => {
+    const [box, anchor, dot, line] = ids.map((id) => document.getElementById(id));
+    return { forView, box, anchor, dot, line };
+  });
   let trackUntil = 0;
   let tracking = false;
 
   function track(now) {
-    // Only on the cover: once the flap starts to open, the start point stays where it was.
-    if (view === "cover") {
+    for (const { forView, box, anchor, dot, line } of trackers) {
+      if (view !== forView) continue;
       const at = anchor.getBoundingClientRect();
-      const box = callout.getBoundingClientRect();
-      const x = at.left - box.left;
-      const y = at.top - box.top;
-      diagLine.setAttribute("x1", x.toFixed(2));
-      diagLine.setAttribute("y1", y.toFixed(2));
-      dot.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) translate(-50%, -50%)`;
+      const frame = box.getBoundingClientRect();
+      const x = (at.left - frame.left).toFixed(2);
+      const y = (at.top - frame.top).toFixed(2);
+      line.setAttribute("x1", x);
+      line.setAttribute("y1", y);
+      dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
     }
     tracking = now < trackUntil;
     if (tracking) requestAnimationFrame(track);
   }
-  // Keep tracking for a moment after the last movement so the tilt can settle.
+  // Keep tracking for a moment after the last movement so the tilt (and the flap,
+  // after a tap) can settle.
   function wakeTracking() {
     trackUntil = performance.now() + 1500;
     if (!tracking) {
