@@ -868,6 +868,23 @@ body {
   outline-offset: 2px;
 }
 
+/* In short landscape viewports, let the opened card scroll at a readable size. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --w: min(88vw, 420px, calc(100vw - max(12px, env(safe-area-inset-left)) - max(12px, env(safe-area-inset-right))));
+  }
+  .stage {
+    padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+  }
+  .scene {
+    flex-shrink: 0;
+  }
+  .scene:not([data-view="open"]) {
+    /* Trim the unused quarter of the scene on each side, leaving room for the cover hint. */
+    margin-block: calc(48px - var(--w) * 55 / 182) calc(var(--w) * -55 / 182);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
