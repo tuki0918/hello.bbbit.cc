@@ -3,10 +3,7 @@ VERSION:3.0
 N:Yamamoto;Yuta;;;
 FN:Yuta Yamamoto
 ORG:bbbit
-TITLE:Software Engineer / Indie Developer
 EMAIL;TYPE=INTERNET,WORK:hello@bbbit.cc
 URL:https://bbbit.cc
-ADR;TYPE=WORK:;;;Wakayama;;;Japan
-X-SOCIALPROFILE;TYPE=github:https://github.com/tuki0918
-NOTE:Zenn: https://zenn.dev/tuki0918 / note: https://note.com/tuki0918
+NOTE:ITで困りごとを解決 ── 身近な不便を、便利に変えよう。
 END:VCARD
