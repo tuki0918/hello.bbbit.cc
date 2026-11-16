@@ -6,10 +6,10 @@
 
   const languageToggle = document.querySelector(".language-toggle");
   const languageToggleLabel = languageToggle.querySelector(".language-toggle-label");
-  // The toggle names the language it switches to, in that language.
+  // The toggle shows the language the card is in now; pressing it switches to the other.
   const TOGGLE = {
-    ja: { to: "en", label: "English", aria: "Switch to English" },
-    en: { to: "ja", label: "日本語", aria: "日本語に切り替える" },
+    ja: { to: "en", label: "日本語", aria: "言語：日本語（English に切り替える）" },
+    en: { to: "ja", label: "English", aria: "Language: English (switch to 日本語)" },
   };
   const textTranslations = [...document.querySelectorAll("[data-en]")].map((element) => ({
     element,
@@ -38,9 +38,7 @@
     }
     const toggle = TOGGLE[language];
     languageToggleLabel.textContent = toggle.label;
-    languageToggleLabel.lang = toggle.to;
     languageToggle.setAttribute("aria-label", toggle.aria);
-    languageToggle.lang = toggle.to;
   }
 
   const languageKey = "bbbit-card-language";
