@@ -138,6 +138,16 @@ body {
   transform: rotateY(180deg) translateZ(1px);
 }
 
+/* Faces turned away are hidden by backface-visibility; as a second guard (some
+   browsers let a turned face's layered children show through), the faces not in
+   view are also switched off once the card has turned past edge-on. */
+.scene[data-view="back"] .cover,
+.scene[data-view="back"] .inner,
+.scene:not([data-view="back"]) .back-cover {
+  visibility: hidden;
+  transition: visibility 0s 0.2s;
+}
+
 /* The cyan corner square is the mark from the bbbit favicon. */
 .corner {
   position: absolute;
@@ -855,11 +865,6 @@ body {
   width: max-content;
   gap: 10px;
 }
-/* The site button uses the plain .btn look, in the English face. */
-.site-link {
-  font-family: var(--font-en);
-  letter-spacing: 0.04em;
-}
 .btn {
   display: inline-flex;
   align-items: center;
@@ -906,6 +911,26 @@ body {
     border-color: var(--cyan);
     background: var(--cyan);
     color: var(--navy);
+  }
+}
+/* The site button is the quiet sibling of the contact button: same shape, a pale
+   tint of the same navy instead of the solid fill, and no outline. */
+.btn.site-link {
+  border-color: transparent;
+  background: rgb(7 20 40 / 8%);
+  color: var(--navy);
+}
+.btn.site-link:hover {
+  border-color: transparent;
+  background: rgb(7 20 40 / 14%);
+}
+@media (prefers-color-scheme: dark) {
+  .btn.site-link {
+    background: rgb(255 255 255 / 12%);
+    color: #e7e9ec;
+  }
+  .btn.site-link:hover {
+    background: rgb(255 255 255 / 18%);
   }
 }
 .btn:focus-visible,

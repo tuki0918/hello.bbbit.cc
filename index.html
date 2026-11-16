@@ -9,10 +9,11 @@
     <meta property="og:title" content="Yuta Yamamoto — bbbit" />
     <meta property="og:description" content="Software Engineer / Indie Developer のデジタル名刺" />
     <!--
-      QRコードに埋め込むURL。空のままなら、いま開いているページのURLを使います。
-      公開先が決まったら content に入れてください（例: https://meishi.example.com/）。
+      QRコードに埋め込むURL（この名刺の公開先）。空にすると、いま開いているページのURLを使います。
     -->
-    <meta name="card-url" content="" />
+    <meta name="card-url" content="https://hello.bbbit.cc/" />
+    <link rel="canonical" href="https://hello.bbbit.cc/" />
+    <meta property="og:url" content="https://hello.bbbit.cc/" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -177,8 +178,9 @@
       <nav class="actions" aria-label="操作">
         <!-- 公式サイトへのリンク。「連絡先に追加」と同じ大きさで左に並べる。 -->
         <a class="btn site-link" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3Z" /></svg>
-          bbbit.cc
+          ホームへ
+          <!-- 外へ出るリンクなので、矢印は文字の後ろに置く。 -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
         </a>
         <a class="btn primary" href="yuta-yamamoto.vcf" download="yuta-yamamoto.vcf">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 8v6M16 11h6" /></svg>
