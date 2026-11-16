@@ -613,6 +613,10 @@ body {
    it, each thumb towards its own colour. */
 .like {
   --fill: 0;
+}
+/* The IT tile is a button too: it sends a like to the first thumb. */
+.like,
+.like-source {
   appearance: none;
   padding: 0;
   border: 0;
@@ -656,14 +660,17 @@ body {
 /* Only where a pointer can really hover: on touch screens the hover state sticks to
    the last thumb tapped, and its filter layer can show through the closed card. */
 @media (hover: hover) {
-  .like:hover .tile {
+  .like:hover .tile,
+  .like-source:hover .tile {
     filter: brightness(1.3);
   }
 }
-.like:focus-visible {
+.like:focus-visible,
+.like-source:focus-visible {
   outline: none;
 }
-.like:focus-visible .tile {
+.like:focus-visible .tile,
+.like-source:focus-visible .tile {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }

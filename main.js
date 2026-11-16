@@ -228,9 +228,11 @@
     badge: button.querySelector(".like-count"),
     count: 0,
   }));
-  // The first arrow comes from the IT tile; the rest sit between the thumbs.
-  const likeArrows = [...flow.querySelectorAll(".flow-arrow")].slice(1);
-  // Each of those arrows gets a second copy of its line, drawn only while a like passes.
+  // The IT tile is the source: it holds no likes, it sends one to the first thumb.
+  const likeSource = flow.querySelector(".like-source");
+  // One arrow leads into each thumb: the first from the IT tile, the rest from the thumb before.
+  const likeArrows = [...flow.querySelectorAll(".flow-arrow")];
+  // Each arrow gets a second copy of its line, drawn only while a like passes.
   const likeLights = likeArrows.map((arrow) => {
     const light = arrow.querySelector("path").cloneNode();
     light.setAttribute("class", "flow-light");
@@ -247,32 +249,40 @@
     if (like.count > 0) like.badge.textContent = like.count; // keep the number while the badge shrinks away
   }
 
+  function popTile(tile) {
+    if (reduceMotion) return;
+    tile.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], {
+      duration: 260,
+      easing: "ease-out",
+    });
+  }
+
+  // A like stays at the thumb it reaches, and only moves on once that thumb is full.
   function addLike(index) {
     if (celebrating) return;
     const like = likes[index];
-    if (!reduceMotion) {
-      like.tile.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], {
-        duration: 260,
-        easing: "ease-out",
-      });
-    }
-    if (like.count < LIKE_GOAL) {
+    popTile(like.tile);
+    const wasFull = like.count === LIKE_GOAL;
+    if (!wasFull) {
       like.count++;
       renderLike(like);
-      if (likes.every((each) => each.count === LIKE_GOAL)) celebrate();
-    } else if (likes.slice(index + 1).some((each) => each.count < LIKE_GOAL)) {
-      sendLike(index);
+      if (likes.every((each) => each.count === LIKE_GOAL)) {
+        celebrate();
+        return;
+      }
+    }
+    if (wasFull && likes.slice(index + 1).some((each) => each.count < LIKE_GOAL)) {
+      sendLike(index + 1);
     }
   }
 
-  // A streak of light runs along the arrow from one thumb to the next.
-  function sendLike(from) {
-    const to = from + 1;
+  // A streak of light runs along the arrow into a thumb, and the like lands there.
+  function sendLike(to) {
     if (reduceMotion) {
       addLike(to);
       return;
     }
-    const light = likeLights[from];
+    const light = likeLights[to];
     light.style.setProperty("--hue", getComputedStyle(likes[to].button).getPropertyValue("--hue"));
     // The path is measured as 1 long; a streak 0.45 long enters at the tail and leaves past the head.
     light.animate(
@@ -363,6 +373,12 @@
     requestAnimationFrame(frame);
   }
 
+  likeSource.addEventListener("click", () => {
+    if (celebrating) return;
+    flow.classList.add("liked");
+    popTile(likeSource.querySelector(".tile"));
+    sendLike(0);
+  });
   for (const [index, like] of likes.entries()) {
     renderLike(like);
     like.button.addEventListener("click", () => {
