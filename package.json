@@ -1,0 +1,7 @@
+{
+  "name": "digital-meishi",
+  "private": true,
+  "scripts": {
+    "build": "sh build.sh"
+  }
+}
