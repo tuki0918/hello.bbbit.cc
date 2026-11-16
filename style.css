@@ -648,6 +648,16 @@ body {
   z-index: 2;
   pointer-events: none;
 }
+/* Narrow screens: start two cells further left (fifth cell from the right), so the
+   label stays over the card instead of running to the edge of the screen. */
+@media (max-width: 719.98px) {
+  .callout-tap {
+    left: 11.8em;
+  }
+  .flap > .callout-anchor {
+    right: 9.9em;
+  }
+}
 /* On the card: centre of the third cell from the right, just inside the top edge. */
 .callout-anchor {
   position: absolute;
@@ -851,50 +861,30 @@ body {
     transform 0.15s,
     visibility 0s 0.15s;
 }
+/* The buttons sit side by side, each as wide as the widest one. */
 .actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: max-content;
+  gap: 10px;
 }
-/* Narrow screens: the link to the site sits above the button, in place of the
-   callout beside the card. */
-.site-link {
+/* Narrow screens: a second button, linking to the site, sits to the left of the
+   contact button in place of the callout beside the card. It uses the plain .btn look. */
+.btn.site-link {
   display: none;
-  align-items: center;
-  gap: 4px;
-  min-height: 24px;
-  color: var(--ink);
   font-family: var(--font-en);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-decoration: underline;
-  text-decoration-color: var(--cyan);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-.site-link svg {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  letter-spacing: 0.04em;
 }
 @media (max-width: 719.98px) {
-  .site-link {
+  .btn.site-link {
     display: inline-flex;
-  }
-  /* Make room for it without pushing the button further from the card. */
-  .actions {
-    margin-top: 16px;
   }
 }
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   min-height: 44px;
   padding: 0 12px;
