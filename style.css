@@ -426,8 +426,7 @@ body {
 .inner-bottom > h2,
 .inner-bottom > p,
 .inner-bottom > .rule,
-.inner-bottom > .flow,
-.inner-bottom > .about-foot {
+.inner-bottom > .flow {
   position: relative;
 }
 /* Heading as on bbbit.cc/about: white, with the question mark in cyan. */
@@ -526,6 +525,14 @@ body {
 .tile .it-dot {
   fill: var(--cyan);
 }
+.tile .tile-thumb {
+  height: 1.25em;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .node-it .tile {
   border-color: var(--cyan);
   background: rgb(22 190 208 / 16%);
@@ -550,44 +557,14 @@ body {
   stroke-linejoin: round;
 }
 
-/* Bottom row: a note on the left, the "b = thumbs-up" legend on the right. */
-.about-foot {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1em;
-  margin-top: auto;
+.about-note {
+  margin: auto 0 0;
   font-size: 0.52em;
   font-weight: 500;
+  line-height: 1.5;
   letter-spacing: 0.04em;
   color: rgb(255 255 255 / 66%);
-}
-.about-note,
-.legend {
-  margin: 0;
   white-space: nowrap;
-}
-.legend {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  color: var(--cyan);
-}
-.legend svg {
-  display: block;
-  height: 1.5em;
-  width: auto;
-}
-.legend-b {
-  fill: #fff;
-}
-.legend-thumb {
-  fill: none;
-  stroke: var(--cyan);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 /* ---------- First-open reveal ---------- */
