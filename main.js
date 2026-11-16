@@ -6,7 +6,6 @@
 
   /* ---------- Views: cover -> open (inside spread) -> back ---------- */
   const ORDER = ["cover", "open", "back"];
-  // Which faces can be seen (and so focused) in each view.
   const VISIBLE = {
     cover: ["cover"],
     open: ["inner-top", "inner-bottom"],
@@ -16,8 +15,6 @@
   let view = "cover";
 
   /* ---------- First-open reveal ---------- */
-  // Cover the inside with grid cells and uncover them in a zigzag the first time
-  // the card opens (same idea as the laser-reveal-effect library, without React).
   const REVEAL = { cols: 10, rows: 6, start: 0.15, sweep: 0.7, cell: 0.12 };
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let revealStarted = false;
@@ -34,7 +31,6 @@
       layer.setAttribute("aria-hidden", "true");
       const total = REVEAL.cols * REVEAL.rows * 2;
       for (let r = 0; r < REVEAL.rows; r++) {
-        // Rows counted from the top of the opened spread.
         const row = panel * REVEAL.rows + r;
         // The rows either side of the fold carry its shading.
         const atFold = panel === 0 ? r === REVEAL.rows - 1 : r === 0;
@@ -189,7 +185,7 @@
     const configured = document.querySelector('meta[name="card-url"]').content.trim();
     const cardUrl = configured || location.origin + location.pathname;
     const NAVY = "#071428";
-    const QUIET = 2; // quiet-zone modules around the code
+    const QUIET = 2;
     const qr = qrcode(0, "M");
     qr.addData(cardUrl);
     qr.make();

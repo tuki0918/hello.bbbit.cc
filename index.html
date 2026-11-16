@@ -27,17 +27,11 @@
   </head>
   <body>
     <main class="stage">
-      <!--
-        二つ折り名刺（縦）: ひらくと 91 × 110mm、たたむと 91 × 55mm。
-        flap = 上にめくれる表紙側の紙、base = 下側の紙。折り目は flap の上辺。
-      -->
       <div class="scene" id="scene" data-view="cover">
         <div class="tilt" id="tilt">
           <div class="book" id="book" role="button" tabindex="0" aria-label="名刺をめくる">
             <div class="panel base">
-              <!-- 中面（下） -->
               <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" inert>
-                <!-- bbbit.cc の About から。 -->
                 <h2 class="about-head">
                   What is
                   <svg viewBox="0 0 164 52" fill="none" role="img" aria-label="bbbit">
@@ -53,10 +47,6 @@
                 <p class="about-lead">
                   bbbit（ビビビット）は、ITやAIを活かして、<br />身近な<mark>「不便」</mark>の解消に取り組んでいます。
                 </p>
-                <!--
-                  図解: IT・AI から「いいね」が
-                  あなた → 家族・仲間 → 地域・社会 へ届く流れとして並べる。
-                -->
                 <div class="rule" aria-hidden="true"><span></span></div>
                 <div class="flow" role="img" aria-label="IT・AI を活かして、あなた、家族・仲間、地域・社会へ「いいね」を届ける">
                   <div class="node node-it"><span class="tile"><svg viewBox="0 0 43 48"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg></span><span class="node-label">IT・AI</span></div>
@@ -70,7 +60,6 @@
                 <p class="about-note">あなたの「いいね」を、地域の「いいね」へ。</p>
               </section>
 
-              <!-- 裏面 -->
               <section class="face dark back-cover" id="back-cover" aria-label="裏面" inert>
                 <span class="corner" aria-hidden="true"></span>
                 <div class="grid" aria-hidden="true"></div>
@@ -85,9 +74,7 @@
             </div>
 
             <div class="panel flap">
-              <!-- 案内線の起点。名刺と一緒に動くので、その画面上の位置に線の根元を合わせる。 -->
               <span class="callout-anchor" id="callout-anchor" aria-hidden="true"></span>
-              <!-- 表紙 -->
               <section class="face dark cover" id="cover" aria-label="表紙">
                 <span class="corner" aria-hidden="true"></span>
                 <div class="grid" aria-hidden="true"></div>
@@ -103,10 +90,8 @@
                 <div class="glare" aria-hidden="true"></div>
               </section>
 
-              <!-- 中面（上） -->
               <section class="face inner inner-top" id="inner-top" aria-label="中面 プロフィール" inert>
                 <span class="corner" aria-hidden="true"></span>
-                <!-- 上段: だれか（アイコン・名前・肩書き） -->
                 <div class="id-row">
                   <img class="avatar" src="avatar-84.webp" srcset="avatar-84.webp 1x, avatar.webp 2x" alt="" width="216" height="228" decoding="async" fetchpriority="low" />
                   <div class="inner-id">
@@ -115,13 +100,11 @@
                     <p class="inner-bio">和歌山市を拠点に、個人でアプリやツールを<br />設計・開発しています。</p>
                   </div>
                 </div>
-                <!-- 下段: アイコンの下に制作実績へのリンク、名前の下にSNS。 -->
                 <div class="id-foot">
                   <a class="works-link" href="https://bbbit.cc/works" target="_blank" rel="noopener noreferrer">
                     <span>WORKS</span>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
                   </a>
-                  <!-- bbbit.cc の About と同じ並び。X と YouTube は未開設なので、薄い表示でリンクなし。 -->
                   <ul class="socials">
                     <li>
                       <a href="https://github.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
@@ -160,27 +143,21 @@
           </div>
         </div>
         <div class="shadow" aria-hidden="true"></div>
-        <!-- 表紙・中面・裏面のどれを見ているかを示す点。操作はできない。 -->
         <div class="pager" aria-hidden="true"><span></span><span></span><span></span></div>
 
-        <!-- 表紙のときだけ、カードから線が伸びて出る案内。PCではホバー中、スマホでは最初のタップまで表示。 -->
         <div class="callout callout-tap" id="callout" aria-hidden="true">
           <span class="callout-dot" id="callout-dot"></span>
-          <!-- 斜め線: 点の中心から右上へ1マス分(2.2em)。横線と同じ線種・同じ太さ。 -->
           <svg class="callout-diag"><line id="callout-diag-line" x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
           <span class="callout-label">
             <span class="callout-text">カードを開く</span>
-            <!-- 横線: この要素の幅いっぱいなので、長さは文字の幅と同じになる。 -->
             <svg class="callout-rule"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
           </span>
         </div>
       </div>
 
       <nav class="actions" aria-label="操作">
-        <!-- 公式サイトへのリンク。「連絡先に追加」と同じ大きさ・同じ色で左に並べる。 -->
         <a class="btn site-link" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
           ホームへ
-          <!-- 外へ出るリンクなので、矢印は文字の後ろに置く。 -->
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
         </a>
         <a class="btn primary" href="yuta-yamamoto.vcf" download="yuta-yamamoto.vcf">
