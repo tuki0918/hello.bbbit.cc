@@ -726,16 +726,23 @@ body {
 }
 
 /* ---------- Controls ---------- */
-/* The scene keeps the opened height, so while the card is folded the controls
-   slide up to sit just under it. */
-/* The button keeps the same distance from the card's bottom edge in every view:
-   folded, the card ends a quarter of the scene (110 / 91 / 4 of its width) higher. */
+/* The button only appears once the card has been opened; on the cover and the back
+   it is hidden (and out of the tab order), with its space kept so nothing jumps. */
 .actions {
   margin-top: calc(14px + var(--w) * 0.08);
-  transition: transform 0.9s cubic-bezier(0.3, 1.1, 0.4, 1);
+  transition:
+    opacity 0.4s ease-out 0.45s,
+    transform 0.4s ease-out 0.45s,
+    visibility 0s 0.45s;
 }
 .scene:not([data-view="open"]) ~ .actions {
-  transform: translateY(calc(var(--w) * -0.3022));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.15s,
+    transform 0.15s,
+    visibility 0s 0.15s;
 }
 .actions {
   display: flex;
