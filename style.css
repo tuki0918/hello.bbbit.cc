@@ -799,81 +799,6 @@ body {
   transition-delay: 0.5s;
 }
 
-/* Site callout: the same leader line carrying the link to bbbit.cc. It leaves the
-   lower panel's right edge one and a half cells (3.3em) below the fold and runs
-   up-right, exactly like the "tap to open" callout. Shown while the card is open and
-   the pointer is over the lower panel (main.js sets .site-hinting; on touch screens
-   it is set whenever the card is open). Screens too narrow to have room beside the
-   card do not get it; they get .site-link above the button instead. */
-.callout-site {
-  left: 21.5em;
-  top: calc(50% + 0.9em);
-  bottom: auto;
-}
-.callout-anchor-site {
-  right: 0.2em;
-  top: 3.3em;
-}
-.callout-site .callout-text {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-  font-family: var(--font-en);
-  letter-spacing: 0.06em;
-  margin-right: 0;
-  text-decoration: none;
-}
-.callout-site .callout-text svg {
-  position: static;
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.callout-site .callout-text:hover {
-  color: #0c8a98;
-}
-@media (max-width: 719.98px) {
-  .callout-site {
-    display: none;
-  }
-}
-.scene:not([data-view="open"]) .callout-site {
-  opacity: 0;
-  visibility: hidden;
-}
-/* On touch screens it appears by itself, so wait for the flap to settle. */
-.callout-site {
-  --wait: 0s;
-}
-@media (hover: none) {
-  .callout-site {
-    --wait: 0.7s;
-  }
-}
-.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-dot {
-  opacity: 1;
-  transition: opacity 0.15s var(--wait);
-}
-.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-diag line {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.25s ease-out var(--wait);
-}
-.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-rule line {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.3s ease-out calc(var(--wait) + 0.25s);
-}
-.scene[data-view="open"]:is(.site-hinting, :has(.callout-site:focus-within)) .callout-site .callout-text {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-  transition-duration: 0.3s;
-  transition-delay: calc(var(--wait) + 0.5s);
-}
-
 /* ---------- Pager ---------- */
 /* Three squares under the card: cover, inside, back. Not a control, only a sign
    that there are three faces and which one is showing. It follows the card's
@@ -930,17 +855,10 @@ body {
   width: max-content;
   gap: 10px;
 }
-/* Narrow screens: a second button, linking to the site, sits to the left of the
-   contact button in place of the callout beside the card. It uses the plain .btn look. */
-.btn.site-link {
-  display: none;
+/* The site button uses the plain .btn look, in the English face. */
+.site-link {
   font-family: var(--font-en);
   letter-spacing: 0.04em;
-}
-@media (max-width: 719.98px) {
-  .btn.site-link {
-    display: inline-flex;
-  }
 }
 .btn {
   display: inline-flex;
@@ -991,8 +909,6 @@ body {
   }
 }
 .btn:focus-visible,
-.site-link:focus-visible,
-.callout-site a:focus-visible,
 .socials a:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;

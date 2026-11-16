@@ -33,8 +33,6 @@
         <div class="tilt" id="tilt">
           <div class="book" id="book" role="button" tabindex="0" aria-label="名刺をめくる">
             <div class="panel base">
-              <!-- 公式サイトの案内線の起点。位置は style.css で画面幅に応じて決める。 -->
-              <span class="callout-anchor callout-anchor-site" id="callout-site-anchor" aria-hidden="true"></span>
               <!-- 中面（下） -->
               <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" inert>
                 <div class="grid" aria-hidden="true"></div>
@@ -174,25 +172,10 @@
             <svg class="callout-rule"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
           </span>
         </div>
-
-        <!-- 幅に余裕のある画面だけ: 開いて下の面にホバーすると、右辺（上から1.5マス）から
-             線が右へ伸びて公式サイトへのリンクが出る。ホバーのない端末では開いている間ずっと出す。
-             スマホなど狭い画面では出さず、「連絡先に追加」の上のリンクで代える。 -->
-        <div class="callout callout-site" id="callout-site">
-          <span class="callout-dot" id="callout-site-dot" aria-hidden="true"></span>
-          <svg class="callout-diag" aria-hidden="true"><line id="callout-site-line" x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
-          <span class="callout-label">
-            <a class="callout-text" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
-              bbbit.cc
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
-            </a>
-            <svg class="callout-rule" aria-hidden="true"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
-          </span>
-        </div>
       </div>
 
       <nav class="actions" aria-label="操作">
-        <!-- 狭い画面で、名刺の横の案内線の代わりに出す公式サイトへのリンク。 -->
+        <!-- 公式サイトへのリンク。「連絡先に追加」と同じ大きさで左に並べる。 -->
         <a class="btn site-link" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3Z" /></svg>
           bbbit.cc
