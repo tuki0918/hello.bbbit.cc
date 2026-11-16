@@ -246,7 +246,8 @@
     like.button.style.setProperty("--fill", like.count / LIKE_GOAL);
     like.button.classList.toggle("has-likes", like.count > 0);
     like.button.classList.toggle("full", like.count === LIKE_GOAL);
-    if (like.count > 0) like.badge.textContent = like.count; // keep the number while the badge shrinks away
+    // Keep the last text while the badge shrinks away. A full thumb reads MAX instead of its number.
+    if (like.count > 0) like.badge.textContent = like.count === LIKE_GOAL ? "MAX" : like.count;
   }
 
   function popTile(tile) {

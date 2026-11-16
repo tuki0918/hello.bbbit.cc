@@ -695,6 +695,11 @@ body {
 .like.has-likes .like-count {
   transform: scale(1);
 }
+/* A full thumb's badge reads MAX: wider than a digit, so it gets side padding. */
+.like.full .like-count {
+  padding: 0 0.4em;
+  letter-spacing: 0.04em;
+}
 /* The streak of light that runs along an arrow as a like passes; main.js moves it. */
 .flow-arrow {
   overflow: visible;
