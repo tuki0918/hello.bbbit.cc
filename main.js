@@ -118,7 +118,7 @@
     setView(ORDER[(ORDER.indexOf(view) + 1) % ORDER.length]);
   }
   book.addEventListener("click", (event) => {
-    if (event.target.closest("a")) return; // links inside stay clickable
+    if (event.target.closest("a, button")) return; // links and like buttons inside stay clickable
     if (!event.target.closest(".panel")) return; // empty space around the folded card
     nextView();
   });
@@ -217,6 +217,160 @@
   scene.addEventListener("pointerleave", wakeTracking);
   book.addEventListener("click", wakeTracking);
   addEventListener("resize", wakeTracking);
+  /* ---------- Likes: each thumb holds a few; once full, further likes flow on ---------- */
+  // Tapping a thumb fills it. A full thumb passes the like along the arrow to the
+  // next one. When all three are full, confetti flies and the diagram starts over.
+  const LIKE_GOAL = 3;
+  const flow = document.querySelector(".flow");
+  const likes = [...flow.querySelectorAll(".like")].map((button) => ({
+    button,
+    tile: button.querySelector(".tile"),
+    badge: button.querySelector(".like-count"),
+    count: 0,
+  }));
+  // The first arrow comes from the IT tile; the rest sit between the thumbs.
+  const likeArrows = [...flow.querySelectorAll(".flow-arrow")].slice(1);
+  // Each of those arrows gets a second copy of its line, drawn only while a like passes.
+  const likeLights = likeArrows.map((arrow) => {
+    const light = arrow.querySelector("path").cloneNode();
+    light.setAttribute("class", "flow-light");
+    light.setAttribute("pathLength", "1");
+    arrow.append(light);
+    return light;
+  });
+  let celebrating = false;
+
+  function renderLike(like) {
+    like.button.style.setProperty("--fill", like.count / LIKE_GOAL);
+    like.button.classList.toggle("has-likes", like.count > 0);
+    like.button.classList.toggle("full", like.count === LIKE_GOAL);
+    if (like.count > 0) like.badge.textContent = like.count; // keep the number while the badge shrinks away
+  }
+
+  function addLike(index) {
+    if (celebrating) return;
+    const like = likes[index];
+    if (!reduceMotion) {
+      like.tile.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], {
+        duration: 260,
+        easing: "ease-out",
+      });
+    }
+    if (like.count < LIKE_GOAL) {
+      like.count++;
+      renderLike(like);
+      if (likes.every((each) => each.count === LIKE_GOAL)) celebrate();
+    } else if (likes.slice(index + 1).some((each) => each.count < LIKE_GOAL)) {
+      sendLike(index);
+    }
+  }
+
+  // A streak of light runs along the arrow from one thumb to the next.
+  function sendLike(from) {
+    const to = from + 1;
+    if (reduceMotion) {
+      addLike(to);
+      return;
+    }
+    const light = likeLights[from];
+    light.style.setProperty("--hue", getComputedStyle(likes[to].button).getPropertyValue("--hue"));
+    // The path is measured as 1 long; a streak 0.45 long enters at the tail and leaves past the head.
+    light.animate(
+      [
+        { strokeDashoffset: 0.45, opacity: 1 },
+        { strokeDashoffset: -1, opacity: 1 },
+      ],
+      { duration: 460, easing: "cubic-bezier(0.4, 0, 0.6, 1)" },
+    ).onfinish = () => addLike(to);
+  }
+
+  function celebrate() {
+    celebrating = true;
+    flow.classList.add("celebrating");
+    if (!reduceMotion) throwConfetti(likes[likes.length - 1].tile);
+    setTimeout(
+      () => {
+        for (const like of likes) {
+          like.count = 0;
+          renderLike(like);
+        }
+        flow.classList.remove("celebrating", "liked");
+        celebrating = false;
+      },
+      reduceMotion ? 1200 : 1800,
+    );
+  }
+
+  // Square confetti, like the logo's dot, thrown up from the last thumb.
+  function throwConfetti(origin) {
+    const box = origin.getBoundingClientRect();
+    const width = innerWidth;
+    const height = innerHeight;
+    const ratio = Math.min(devicePixelRatio || 1, 2);
+    const canvas = document.createElement("canvas");
+    canvas.className = "confetti";
+    canvas.setAttribute("aria-hidden", "true");
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    document.body.append(canvas);
+    const context = canvas.getContext("2d");
+    context.scale(ratio, ratio);
+    const COLORS = ["#16bed0", "#4fe3a1", "#ffd447", "#ff6b9a", "#ffffff", "#071428"];
+    const DURATION = 2600;
+    const pieces = Array.from({ length: 130 }, (_, i) => {
+      const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1;
+      const speed = 300 + Math.random() * 560;
+      return {
+        x: box.left + box.width / 2,
+        y: box.top + box.height / 2,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 4 + Math.random() * 5,
+        turn: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 14,
+        flip: Math.random() * Math.PI * 2,
+        flipSpeed: 4 + Math.random() * 8,
+        color: COLORS[i % COLORS.length],
+      };
+    });
+    let start;
+    let last;
+    function frame(now) {
+      start ??= now;
+      const dt = Math.min((now - (last ?? now)) / 1000, 0.05);
+      last = now;
+      const elapsed = now - start;
+      context.clearRect(0, 0, width, height);
+      context.globalAlpha = Math.max(0, Math.min(1, (DURATION - elapsed) / 500));
+      for (const piece of pieces) {
+        piece.vx *= Math.pow(0.3, dt);
+        piece.vy = Math.min(piece.vy + 900 * dt, 380); // paper falls slowly
+        piece.x += piece.vx * dt;
+        piece.y += piece.vy * dt;
+        piece.turn += piece.spin * dt;
+        piece.flip += piece.flipSpeed * dt;
+        context.save();
+        context.translate(piece.x, piece.y);
+        context.rotate(piece.turn);
+        context.scale(1, Math.cos(piece.flip));
+        context.fillStyle = piece.color;
+        context.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size);
+        context.restore();
+      }
+      if (elapsed < DURATION) requestAnimationFrame(frame);
+      else canvas.remove();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  for (const [index, like] of likes.entries()) {
+    renderLike(like);
+    like.button.addEventListener("click", () => {
+      flow.classList.add("liked");
+      addLike(index);
+    });
+  }
+
   /* ---------- QR code ---------- */
   let qrRequested = false;
   function prepareQr() {
