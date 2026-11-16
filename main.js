@@ -4,8 +4,13 @@
   const tilt = document.getElementById("tilt");
   const root = document.documentElement;
 
-  const languageSwitch = document.querySelector(".language-switch");
-  const languageButtons = [...languageSwitch.querySelectorAll("button")];
+  const languageToggle = document.querySelector(".language-toggle");
+  const languageToggleLabel = languageToggle.querySelector(".language-toggle-label");
+  // The toggle names the language it switches to, in that language.
+  const TOGGLE = {
+    ja: { to: "en", label: "English", aria: "Switch to English" },
+    en: { to: "ja", label: "日本語", aria: "日本語に切り替える" },
+  };
   const textTranslations = [...document.querySelectorAll("[data-en]")].map((element) => ({
     element,
     ja: element.textContent,
@@ -31,27 +36,27 @@
     for (const { element, attribute, ...copy } of attributeTranslations) {
       element.setAttribute(attribute, copy[language]);
     }
-    for (const button of languageButtons) {
-      button.setAttribute("aria-pressed", String(button.dataset.language === language));
-    }
+    const toggle = TOGGLE[language];
+    languageToggleLabel.textContent = toggle.label;
+    languageToggleLabel.lang = toggle.to;
+    languageToggle.setAttribute("aria-label", toggle.aria);
+    languageToggle.lang = toggle.to;
   }
 
   const languageKey = "bbbit-card-language";
   // The language was picked in <head> before the first paint; apply it to the text.
   setLanguage(root.lang === "en" ? "en" : "ja");
   root.classList.add("lang-ready");
-  for (const button of languageButtons) {
-    button.addEventListener("click", () => {
-      const language = button.dataset.language;
-      setLanguage(language);
-      try {
-        localStorage.setItem(languageKey, language);
-      } catch {
-        // The current page is already updated.
-      }
-    });
-  }
-  languageSwitch.hidden = false;
+  languageToggle.addEventListener("click", () => {
+    const language = TOGGLE[root.lang === "en" ? "en" : "ja"].to;
+    setLanguage(language);
+    try {
+      localStorage.setItem(languageKey, language);
+    } catch {
+      // The current page is already updated.
+    }
+  });
+  languageToggle.hidden = false;
 
   /* ---------- Views: cover -> open (inside spread) -> back ---------- */
   const ORDER = ["cover", "open", "back"];

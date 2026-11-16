@@ -61,49 +61,50 @@ body {
   padding: max(20px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
 }
 
-.language-switch:not([hidden]) {
+/* Language toggle: a quiet translate icon in the corner, with the language it
+   switches to written beside it. No frame or fill until it is pointed at. */
+.language-toggle:not([hidden]) {
   position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
   z-index: 3;
   display: flex;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--btn-bg);
-}
-.language-switch button {
-  position: relative;
-  min-width: 42px;
-  min-height: 32px;
-  padding: 0 10px;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
   border: 0;
   border-radius: 999px;
   background: transparent;
+  /* Same grey as the small print on the card: quiet, but clearly readable. */
   color: var(--muted);
   cursor: pointer;
   font: inherit;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+/* A filled glyph stays sharp at this size, where a thin outline goes soft. */
+.language-toggle svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+.language-toggle-label {
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
-/* Reach 44px of tap height without changing how it looks. */
-.language-switch button::after {
-  content: "";
-  position: absolute;
-  inset: -6px -1px;
+/* "English" in the card's English face, like the name and title. */
+.language-toggle-label:lang(en) {
+  font-family: var(--font-en);
+  letter-spacing: 0.04em;
 }
-.language-switch button:hover {
-  color: var(--navy);
-}
-/* The chosen language: filled in the page's ink (near-black), white text. */
-.language-switch button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--canvas);
-}
-.language-switch button:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 2px;
+.language-toggle:hover {
+  background: rgb(7 20 40 / 6%);
+  color: var(--ink);
 }
 :root[lang="en"]:not(.lang-ready) [data-en] {
   visibility: hidden;
@@ -894,7 +895,7 @@ body {
 .actions .btn:hover {
   background: rgb(7 20 40 / 14%);
 }
-.language-switch button:focus-visible,
+.language-toggle:focus-visible,
 .btn:focus-visible,
 .works-link:focus-visible,
 .socials a:focus-visible {
