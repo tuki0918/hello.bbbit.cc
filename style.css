@@ -1,6 +1,6 @@
 /* Colors follow bbbit.cc (navy #071428, cyan #16BED0). English text uses --font-en. */
 :root {
-  color-scheme: light dark;
+  color-scheme: only light;
   /* English text (name, title, headings, email). Change here to try another face. */
   --font-en: "Space Grotesk", sans-serif;
   --navy: #071428;
@@ -19,17 +19,6 @@
   --gx: 50%;
   --gy: 0%;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --canvas: #101214;
-    --ink: #e7e9ec;
-    --muted: #a0a7af;
-    --line: #383d45;
-    --btn-bg: #1f2227;
-    --floor: rgb(0 0 0 / 70%);
-  }
-}
-
 * {
   box-sizing: border-box;
 }
@@ -908,15 +897,6 @@ body {
 }
 .actions .btn:hover {
   background: rgb(7 20 40 / 14%);
-}
-@media (prefers-color-scheme: dark) {
-  .actions .btn {
-    background: rgb(255 255 255 / 12%);
-    color: #e7e9ec;
-  }
-  .actions .btn:hover {
-    background: rgb(255 255 255 / 18%);
-  }
 }
 .btn:focus-visible,
 .socials a:focus-visible {
