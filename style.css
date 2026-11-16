@@ -13,7 +13,7 @@
   --floor: rgb(16 24 40 / 28%);
 
   /* ひらいた二つ折り名刺 (91 × 110mm) が画面の幅と高さの両方に収まる大きさにする。 */
-  --w: min(80vw, 420px, calc((100dvh - 230px) * 91 / 110));
+  --w: min(88vw, 420px, calc((100dvh - 230px) * 91 / 110));
   --rx: 0deg;
   --ry: 0deg;
   --gx: 50%;
@@ -874,6 +874,35 @@ body {
   transition-delay: calc(var(--wait) + 0.5s);
 }
 
+/* ---------- Pager ---------- */
+/* Three squares under the card: cover, inside, back. Not a control, only a sign
+   that there are three faces and which one is showing. It follows the card's
+   bottom edge, which is a quarter of the scene higher while the card is folded. */
+.pager {
+  position: absolute;
+  left: 50%;
+  top: calc(75% + 22px);
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+  transition: top 0.9s cubic-bezier(0.3, 1.1, 0.4, 1);
+  pointer-events: none;
+}
+.scene[data-view="open"] .pager {
+  top: calc(100% + 22px);
+}
+.pager span {
+  width: 6px;
+  height: 6px;
+  background: var(--line);
+  transition: background-color 0.3s;
+}
+.scene[data-view="cover"] .pager span:nth-child(1),
+.scene[data-view="open"] .pager span:nth-child(2),
+.scene[data-view="back"] .pager span:nth-child(3) {
+  background: var(--cyan);
+}
+
 /* ---------- Controls ---------- */
 /* The button only appears once the card has been opened; on the cover and the back
    it is hidden (and out of the tab order), with its space kept so nothing jumps. */
@@ -983,6 +1012,7 @@ body {
   .book,
   .flap,
   .shadow,
+  .pager,
   .actions,
   .tilt {
     transition-duration: 0.01s;
