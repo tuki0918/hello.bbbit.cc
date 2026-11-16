@@ -4,6 +4,55 @@
   const tilt = document.getElementById("tilt");
   const root = document.documentElement;
 
+  const languageSwitch = document.querySelector(".language-switch");
+  const languageButtons = [...languageSwitch.querySelectorAll("button")];
+  const textTranslations = [...document.querySelectorAll("[data-en]")].map((element) => ({
+    element,
+    ja: element.textContent,
+    en: element.dataset.en,
+  }));
+  const attributeTranslations = [];
+  for (const [attribute, translation] of [["aria-label", "data-en-label"], ["title", "data-en-title"]]) {
+    for (const element of document.querySelectorAll(`[${translation}]`)) {
+      attributeTranslations.push({
+        element,
+        attribute,
+        ja: element.getAttribute(attribute),
+        en: element.getAttribute(translation),
+      });
+    }
+  }
+
+  function setLanguage(language) {
+    root.lang = language;
+    for (const { element, ...copy } of textTranslations) {
+      element.textContent = copy[language];
+    }
+    for (const { element, attribute, ...copy } of attributeTranslations) {
+      element.setAttribute(attribute, copy[language]);
+    }
+    for (const button of languageButtons) {
+      button.setAttribute("aria-pressed", String(button.dataset.language === language));
+    }
+  }
+
+  const languageKey = "bbbit-card-language";
+  // The language was picked in <head> before the first paint; apply it to the text.
+  setLanguage(root.lang === "en" ? "en" : "ja");
+  root.classList.add("lang-ready");
+  for (const button of languageButtons) {
+    button.addEventListener("click", () => {
+      const language = button.dataset.language;
+      setLanguage(language);
+      try {
+        localStorage.setItem(languageKey, language);
+      } catch {
+        // The current page is already updated.
+      }
+    });
+  }
+  languageSwitch.hidden = false;
+
   /* ---------- Views: cover -> open (inside spread) -> back ---------- */
   const ORDER = ["cover", "open", "back"];
   const VISIBLE = {

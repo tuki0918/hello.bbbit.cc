@@ -61,6 +61,58 @@ body {
   padding: max(20px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
 }
 
+.language-switch:not([hidden]) {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 3;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--btn-bg);
+}
+.language-switch button {
+  position: relative;
+  min-width: 42px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+/* Reach 44px of tap height without changing how it looks. */
+.language-switch button::after {
+  content: "";
+  position: absolute;
+  inset: -6px -1px;
+}
+.language-switch button:hover {
+  color: var(--navy);
+}
+/* The chosen language: filled in the page's ink (near-black), white text. */
+.language-switch button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.language-switch button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+:root[lang="en"]:not(.lang-ready) [data-en] {
+  visibility: hidden;
+}
+:root[lang="ja"] .localized-copy[lang="en"],
+:root[lang="en"] .localized-copy[lang="ja"] {
+  display: none;
+}
+
 /* ---------- Folded card ---------- */
 /* The scene always reserves the opened size (91 x 110mm); each panel is 91 x 55mm. */
 .scene {
@@ -536,6 +588,7 @@ body {
   line-height: 1.3;
   white-space: nowrap;
 }
+
 .flow-arrow {
   align-self: start;
   justify-self: center;
@@ -841,6 +894,7 @@ body {
 .actions .btn:hover {
   background: rgb(7 20 40 / 14%);
 }
+.language-switch button:focus-visible,
 .btn:focus-visible,
 .works-link:focus-visible,
 .socials a:focus-visible {
@@ -855,6 +909,7 @@ body {
   }
   .stage {
     padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+    padding-top: max(56px, calc(env(safe-area-inset-top) + 44px));
   }
   .scene {
     flex-shrink: 0;

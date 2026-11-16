@@ -1,0 +1,9 @@
+{
+  // デジタル名刺（hello.bbbit.cc）。ビルドなしの静的ファイルを、そのまま Workers の静的アセットとして配信する。
+  // 配信しないファイルは .assetsignore に書く。
+  "name": "bbbit-hello",
+  "compatibility_date": "2026-10-06",
+  "assets": {
+    "directory": "./",
+  },
+}

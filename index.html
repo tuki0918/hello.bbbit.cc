@@ -18,17 +18,34 @@
     <meta property="og:image:alt" content="bbbit — 身近な不便を、便利に変えよう。" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script>
+      // 表示言語を最初の描画の前に決める: 保存した選択があればそれ、なければ端末の言語（日本語以外は EN）。
+      // キーは main.js と同じ。
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("bbbit-card-language");
+        } catch (error) {}
+        var preferred = (navigator.languages && navigator.languages[0]) || navigator.language || "ja";
+        document.documentElement.lang =
+          saved === "ja" || saved === "en" ? saved : /^ja\b/i.test(preferred) ? "ja" : "en";
+      })();
+    </script>
     <link rel="stylesheet" href="style.css" />
     <script src="main.js" defer></script>
     <title>bbbit｜PROFILE</title>
   </head>
   <body>
     <main class="stage">
+      <div class="language-switch" role="group" aria-label="表示言語" data-en-label="Display language" hidden>
+        <button type="button" lang="ja" data-language="ja" aria-pressed="true">日本語</button>
+        <button type="button" lang="en" data-language="en" aria-pressed="false">English</button>
+      </div>
       <div class="scene" id="scene" data-view="cover">
         <div class="tilt" id="tilt">
-          <div class="book" id="book" role="button" tabindex="0" aria-label="名刺をめくる">
+          <div class="book" id="book" role="button" tabindex="0" aria-label="名刺をめくる" data-en-label="Turn the card">
             <div class="panel base">
-              <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" inert>
+              <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" data-en-label="Inside: about bbbit" inert>
                 <h2 class="about-head">
                   What is
                   <svg viewBox="0 0 164 52" fill="none" role="img" aria-label="bbbit">
@@ -42,28 +59,32 @@
                   </svg><span class="q">?</span>
                 </h2>
                 <p class="about-lead">
-                  bbbit（ビビビット）は、ITやAIを活かして、<br />身近な<mark>「不便」</mark>の解消に取り組んでいます。
+                  <span class="localized-copy" lang="ja">bbbit（ビビビット）は、ITやAIを活かして、<br />身近な<mark>「不便」</mark>の解消に取り組んでいます。</span>
+                  <span class="localized-copy" lang="en">bbbit uses IT and AI to tackle the little<br /><mark>hassles</mark> that get in the way of everyday life.</span>
                 </p>
                 <div class="rule" aria-hidden="true"><span></span></div>
-                <div class="flow" role="img" aria-label="IT・AI を活かして、あなた、家族・仲間、地域・社会へ「いいね」を届ける">
-                  <div class="node node-it"><span class="tile"><svg viewBox="0 0 43 48"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg></span><span class="node-label">IT・AI</span></div>
+                <div class="flow" role="img" aria-label="IT・AI を活かして、あなた、家族・仲間、地域・社会へ「いいね」を届ける" data-en-label="IT and AI, for you, your circle, and your community.">
+                  <div class="node node-it"><span class="tile"><svg viewBox="0 0 43 48"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg></span><span class="node-label" data-en="IT &amp; AI">IT・AI</span></div>
                   <svg class="flow-arrow" viewBox="0 0 32 14" aria-hidden="true"><path d="M1 7h30m-5-5 5 5-5 5" /></svg>
-                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label">あなた</span></div>
+                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label" data-en="You">あなた</span></div>
                   <svg class="flow-arrow" viewBox="0 0 32 14" aria-hidden="true"><path d="M1 7h30m-5-5 5 5-5 5" /></svg>
-                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label">家族・仲間</span></div>
+                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label" data-en="Your circle">家族・仲間</span></div>
                   <svg class="flow-arrow" viewBox="0 0 32 14" aria-hidden="true"><path d="M1 7h30m-5-5 5 5-5 5" /></svg>
-                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label">地域・社会</span></div>
+                  <div class="node"><span class="tile"><svg class="tile-thumb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg></span><span class="node-label" data-en="Community">地域・社会</span></div>
                 </div>
-                <p class="about-note">あなたの「いいね」を、地域の「いいね」へ。</p>
+                <p class="about-note" data-en="From your like to your community’s.">あなたの「いいね」を、地域の「いいね」へ。</p>
               </section>
 
-              <section class="face dark back-cover" id="back-cover" aria-label="裏面" inert>
+              <section class="face dark back-cover" id="back-cover" aria-label="裏面" data-en-label="Back of the card" inert>
                 <span class="corner" aria-hidden="true"></span>
                 <div class="grid" aria-hidden="true"></div>
-                <div class="qr" id="qr" role="img" aria-label="この名刺のQRコード"></div>
+                <div class="qr" id="qr" role="img" aria-label="この名刺のQRコード" data-en-label="QR code for this card"></div>
                 <div class="back-info">
-                  <p class="trade">ITで困りごとを解決</p>
-                  <p class="catch">身近な不便を、<br />便利に変えよう。</p>
+                  <p class="trade" data-en="IT problem solver">ITで困りごとを解決</p>
+                  <p class="catch">
+                    <span class="localized-copy" lang="ja">身近な不便を、<br />便利に変えよう。</span>
+                    <span class="localized-copy" lang="en">Make everyday<br />things easier.</span>
+                  </p>
                   <p class="domain"><a href="mailto:hello@bbbit.cc">hello@bbbit.cc</a></p>
                 </div>
                 <div class="glare" aria-hidden="true"></div>
@@ -72,7 +93,7 @@
 
             <div class="panel flap">
               <span class="callout-anchor" id="callout-anchor" aria-hidden="true"></span>
-              <section class="face dark cover" id="cover" aria-label="表紙">
+              <section class="face dark cover" id="cover" aria-label="表紙" data-en-label="Front cover">
                 <span class="corner" aria-hidden="true"></span>
                 <div class="grid" aria-hidden="true"></div>
                 <svg class="logo" viewBox="0 0 164 52" fill="none" role="img" aria-label="bbbit">
@@ -87,14 +108,17 @@
                 <div class="glare" aria-hidden="true"></div>
               </section>
 
-              <section class="face inner inner-top" id="inner-top" aria-label="中面 プロフィール" inert>
+              <section class="face inner inner-top" id="inner-top" aria-label="中面 プロフィール" data-en-label="Inside: profile" inert>
                 <span class="corner" aria-hidden="true"></span>
                 <div class="id-row">
                   <img class="avatar" src="avatar-84.webp" srcset="avatar-84.webp 1x, avatar.webp 2x" alt="" width="216" height="228" decoding="async" fetchpriority="low" />
                   <div class="inner-id">
                     <h1 class="inner-name">Yuta Yamamoto</h1>
                     <p class="inner-role">Software Engineer</p>
-                    <p class="inner-bio">和歌山市を拠点に、個人でアプリやツールを<br />設計・開発しています。</p>
+                    <p class="inner-bio">
+                      <span class="localized-copy" lang="ja">和歌山市を拠点に、個人でアプリやツールを<br />設計・開発しています。</span>
+                      <span class="localized-copy" lang="en">Independent developer of apps and tools,<br />based in Japan.</span>
+                    </p>
                   </div>
                 </div>
                 <div class="id-foot">
@@ -119,17 +143,17 @@
                       </a>
                     </li>
                     <li>
-                      <span class="social-off" title="X（準備中）">
+                      <span class="social-off" title="X（準備中）" data-en-title="X (coming soon)">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path class="line" d="m4 3 16 18h-5L4 3h5l11 18M20 3 4 21" /></svg>
                       </span>
                     </li>
                     <li>
-                      <span class="social-off" title="YouTube（準備中）">
+                      <span class="social-off" title="YouTube（準備中）" data-en-title="YouTube (coming soon)">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M21.6 5.1C20.9 4.4 18.1 4 12 4s-8.9.4-9.6 1.1C1.4 6.1 1 8.1 1 12s.4 5.9 1.4 6.9C3.1 19.6 5.9 20 12 20s8.9-.4 9.6-1.1C22.6 17.9 23 15.9 23 12s-.4-5.9-1.4-6.9ZM10 8l6 4-6 4V8Z" /></svg>
                       </span>
                     </li>
                     <li>
-                      <a href="mailto:hello@bbbit.cc" aria-label="メール">
+                      <a href="mailto:hello@bbbit.cc" aria-label="メール" data-en-label="Email">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><g class="line"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 6 9 7 9-7" /></g></svg>
                       </a>
                     </li>
@@ -146,20 +170,20 @@
           <span class="callout-dot" id="callout-dot"></span>
           <svg class="callout-diag"><line id="callout-diag-line" x1="11.1%" y1="92.3%" x2="100%" y2="0" pathLength="1" /></svg>
           <span class="callout-label">
-            <span class="callout-text">カードを開く</span>
+            <span class="callout-text" data-en="Open the card">カードを開く</span>
             <svg class="callout-rule"><line x1="-0.5" y1="1" x2="100%" y2="1" pathLength="1" /></svg>
           </span>
         </div>
       </div>
 
-      <nav class="actions" aria-label="操作">
+      <nav class="actions" aria-label="操作" data-en-label="Actions">
         <a class="btn site-link" href="https://bbbit.cc" target="_blank" rel="noopener noreferrer">
-          ホームへ
+          <span data-en="Website">ホームへ</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
         </a>
         <a class="btn primary" href="yuta-yamamoto.vcf" download="yuta-yamamoto.vcf">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 8v6M16 11h6" /></svg>
-          連絡先に追加
+          <span data-en="Save contact">連絡先に追加</span>
         </a>
       </nav>
     </main>
