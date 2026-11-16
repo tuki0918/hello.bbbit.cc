@@ -37,19 +37,21 @@
               <section class="face inner inner-bottom dark" id="inner-bottom" aria-label="中面 bbbit について" inert>
                 <div class="grid" aria-hidden="true"></div>
                 <!-- bbbit.cc の About から。 -->
-                <p class="about-head">
-                  <span>What is bbbit?</span>
-                  <a href="https://bbbit.cc/about" target="_blank" rel="noopener noreferrer">bbbit.cc/about</a>
+                <h2 class="about-head">What is bbbit<span>?</span></h2>
+                <p class="about-lead">
+                  bbbit（ビビビット）は、ITやAIを活かして、<br />身近な<mark>「不便」</mark>の解消に取り組んでいます。
                 </p>
-                <p class="about-lead">bbbit（ビビビット）は、ITやAIを活かして、身近な「不便」の解消に取り組んでいます。</p>
-                <!-- ロゴ「bbbit」を1文字ずつに分けて、それぞれの意味を添える。 -->
-                <p class="about-sub">3つの「b」＝「いいね」と、「IT」でできた名前</p>
-                <ul class="letters">
-                  <li><svg viewBox="0 0 32 48" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg><span>使う人</span></li>
-                  <li><svg viewBox="0 0 32 48" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg><span>そのまわりの人</span></li>
-                  <li><svg viewBox="0 0 32 48" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg><span>地域</span></li>
-                  <li><svg viewBox="0 0 43 48" aria-hidden="true"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg><span>IT・AI</span></li>
-                </ul>
+                <!--
+                  図解: ロゴを it / b / b / b に分け、IT・AI から「いいね」が
+                  あなた → 家族・仲間 → 地域 へ届く流れとして並べる。
+                -->
+                <div class="rule" aria-hidden="true"><span></span></div>
+                <div class="flow" role="img" aria-label="IT・AI を活かして、あなた、家族・仲間、地域へ「いいね」を届ける">
+                  <div class="node node-it"><span class="tile"><svg viewBox="0 0 43 48"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg></span><span class="node-label">IT・AI</span></div>
+                  <div class="node"><span class="tile"><svg viewBox="0 0 32 48"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg></span><span class="node-label">あなた</span></div>
+                  <div class="node"><span class="tile"><svg viewBox="0 0 32 48"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg></span><span class="node-label">家族・仲間</span></div>
+                  <div class="node"><span class="tile"><svg viewBox="0 0 32 48"><path fill-rule="evenodd" d="M0 0h9v14h23v34H0V0Zm9 23v16h14V23H9Z" /></svg></span><span class="node-label">地域</span></div>
+                </div>
               </section>
 
               <!-- 裏面 -->
@@ -92,7 +94,7 @@
                 <div class="inner-id">
                   <h1 class="inner-name">Yuta Yamamoto</h1>
                   <p class="inner-role">Software Engineer<br />Indie Developer</p>
-                  <!-- bbbit.cc の About と同じ並び（GitHub・Zenn・note・Mail）。アイコンも同じもの。 -->
+                  <!-- GitHub・X・YouTube・Mail。X と YouTube は未開設なので、bbbit.cc と同じく薄い表示でリンクなし。 -->
                   <ul class="socials">
                     <li>
                       <a href="https://github.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
@@ -100,14 +102,14 @@
                       </a>
                     </li>
                     <li>
-                      <a href="https://zenn.dev/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="Zenn">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.264 23.771h4.984c.264 0 .498-.147.645-.352L19.614.874c.176-.293-.029-.645-.381-.645h-4.72c-.235 0-.44.117-.557.323L.03 23.361c-.088.176.029.41.234.41zM17.445 23.419l6.479-10.408c.205-.323-.029-.733-.41-.733h-4.691c-.176 0-.352.088-.44.235l-6.655 10.643c-.176.264.029.616.352.616h4.779c.234-.001.468-.118.586-.353z" /></svg>
-                      </a>
+                      <span class="social-off" title="X（準備中）">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="line" d="m4 3 16 18h-5L4 3h5l11 18M20 3 4 21" /></svg>
+                      </span>
                     </li>
                     <li>
-                      <a href="https://note.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="note">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 .279c4.623 0 10.953-.235 15.498-.117 6.099.156 8.39 2.813 8.468 9.374.077 3.71 0 14.335 0 14.335h-6.598c0-9.296.04-10.83 0-13.759-.078-2.578-.814-3.807-2.795-4.041-2.097-.235-7.975-.04-7.975-.04v17.84H0Z" /></svg>
-                      </a>
+                      <span class="social-off" title="YouTube（準備中）">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M21.6 5.1C20.9 4.4 18.1 4 12 4s-8.9.4-9.6 1.1C1.4 6.1 1 8.1 1 12s.4 5.9 1.4 6.9C3.1 19.6 5.9 20 12 20s8.9-.4 9.6-1.1C22.6 17.9 23 15.9 23 12s-.4-5.9-1.4-6.9ZM10 8l6 4-6 4V8Z" /></svg>
+                      </span>
                     </li>
                     <li>
                       <a href="mailto:hello@bbbit.cc" aria-label="メール">
