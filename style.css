@@ -571,6 +571,7 @@ body {
 
 .about-note {
   margin: auto 0 0;
+  text-align: right;
   font-size: 0.52em;
   font-weight: 500;
   line-height: 1.5;
