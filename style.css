@@ -194,12 +194,14 @@ body {
   perspective: 1400px;
   /* All inner sizes are in em so the card scales as one piece. */
   font-size: calc(var(--w) / 22);
-  transition: margin 0.7s cubic-bezier(0.3, 0.9, 0.3, 1);
-}
-/* Unfolded, the card is taller than the scene; --grow (from main.js) is how far it
-   reaches past the top and bottom, so the page makes room for it. */
-.scene.unfolded {
-  margin-block: var(--grow, 0px);
+  /* main.js sizes the card to the screen for each state: folded, opened, and with
+     WORKS unfolded. --fit shrinks it where the screen is too short; the margins
+     take away (or add) the room the card does not (or does) use. */
+  scale: var(--fit, 1);
+  margin-block: var(--fit-top, 0px) var(--fit-bottom, 0px);
+  transition:
+    scale 0.8s cubic-bezier(0.3, 0.9, 0.3, 1),
+    margin 0.8s cubic-bezier(0.3, 0.9, 0.3, 1);
 }
 .tilt {
   width: 100%;
@@ -271,10 +273,9 @@ body {
   inherits: true;
   initial-value: 90deg;
 }
+/* Unfolded, the card is half as tall again: a quarter of the scene above and below. */
 .scene.unfolded .book {
   --pleat: 0deg;
-  /* Half as tall again: main.js shrinks it (--fit) where the screen is too short. */
-  transform: scale(var(--fit, 1));
 }
 /* `translate`, not `transform`: these two already transition their transform, and
    would trail behind the pleat if it were animated through that. */
@@ -1186,7 +1187,7 @@ body {
   bottom: -4%;
 }
 .scene.unfolded .shadow {
-  bottom: calc(-4% - var(--grow, 0px));
+  bottom: -29%;
 }
 
 /* ---------- Callout ---------- */
@@ -1334,7 +1335,7 @@ body {
   top: calc(100% + 22px);
 }
 .scene.unfolded .pager {
-  top: calc(100% + var(--grow, 0px) + 22px);
+  top: calc(125% + 22px);
 }
 .pager span {
   width: 6px;
@@ -1426,22 +1427,20 @@ body {
   outline-offset: 2px;
 }
 
-/* In short landscape viewports, let the opened card scroll at a readable size. */
+/* Short landscape screens: the card is sized by its width here, and main.js shrinks
+   it to the height for each state. The Home button may fall below the fold. */
 @media (orientation: landscape) and (max-height: 500px) {
   :root {
     --w: min(88vw, 420px, calc(100vw - max(12px, env(safe-area-inset-left)) - max(12px, env(safe-area-inset-right))));
   }
   .stage {
     padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
-    padding-top: max(56px, calc(env(safe-area-inset-top) + 44px));
+    padding-block: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-bottom));
   }
-  .scene {
-    flex-shrink: 0;
-  }
-  .scene:not([data-view="open"]) {
-    /* Trim the unused quarter of the scene on each side, leaving room for the cover hint. */
-    margin-block: calc(48px - var(--w) * 55 / 182) calc(var(--w) * -55 / 182);
-  }
+}
+/* Never squeezed by the flex column: its size is set by --fit and the margins. */
+.scene {
+  flex-shrink: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

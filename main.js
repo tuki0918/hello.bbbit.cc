@@ -113,19 +113,10 @@
   const FOLD_LABEL = { false: ["WORKS をひらく", "Unfold WORKS"], true: ["WORKS をたたむ", "Fold WORKS away"] };
   let unfolded = false;
 
-  // Unfolded, the card is half as tall again. Shrink it to fit short screens, and
-  // tell the layout how far it reaches past the scene's own box.
-  function fitFold() {
-    const height = scene.offsetHeight;
-    const fit = Math.min(1, (innerHeight - 210) / (height * 1.5));
-    scene.style.setProperty("--fit", fit.toFixed(4));
-    scene.style.setProperty("--grow", `${Math.max(0, ((1.5 * fit - 1) * height) / 2).toFixed(1)}px`);
-  }
-
   function setFold(open) {
     unfolded = open;
-    if (open) fitFold();
     scene.classList.toggle("unfolded", open);
+    fitCard();
     worksToggle.setAttribute("aria-expanded", String(open));
     const label = attributeTranslations.find((each) => each.element === worksToggle);
     [label.ja, label.en] = FOLD_LABEL[open];
@@ -133,9 +124,6 @@
     for (const pleat of pleats) pleat.inert = !open;
   }
   worksToggle.addEventListener("click", () => setFold(!unfolded));
-  addEventListener("resize", () => {
-    if (unfolded) fitFold();
-  });
 
   // The app icons: tapping one describes it on the lower half of the pleat.
   const works = [...document.querySelectorAll("button.work")];
@@ -170,6 +158,43 @@
   renderWork();
   languageToggle.addEventListener("click", renderWork); // after setLanguage has run
 
+  /* ---------- Fit the card to the screen, for each state ---------- */
+  // How much of the scene's height the paper covers: folded, opened, opened with
+  // WORKS out. It is always centred on the scene.
+  const SPAN = { cover: 0.5, open: 1, back: 0.5 };
+  const stage = document.querySelector(".stage");
+  const PAGER = 30; // the squares under the card, and their gap
+  let fit = 1;
+
+  function fitCard() {
+    const width = scene.offsetWidth;
+    const height = scene.offsetHeight;
+    const span = (unfolded ? 1.5 : SPAN[view]) * height;
+    const em = width / 22;
+    // The cover hint's label stands above the folded card. The back keeps the same
+    // room, so the card sits in the same place on both sides.
+    const above = view !== "open" ? 4 * em : 0;
+    const pad = getComputedStyle(stage);
+    const padTop = parseFloat(pad.paddingTop);
+    const room = innerHeight - padTop - parseFloat(pad.paddingBottom);
+    const measure = (clear) => Math.min(1, (room - clear) / (span + above + PAGER));
+    // Keep clear of the language toggle if the card would run under it.
+    const toggle = languageToggle.getBoundingClientRect();
+    fit = measure(0);
+    let clear = 0;
+    if ((innerWidth + width * fit) / 2 > toggle.left - 4) {
+      clear = Math.max(0, toggle.bottom + 6 - padTop);
+      fit = measure(clear);
+    }
+    // The scene keeps its full layout box; these margins trim it to what the paper
+    // covers once scaled (about its centre), so the page lays out around the card.
+    const trim = ((span * fit) / 2 - height / 2);
+    scene.style.setProperty("--fit", fit.toFixed(4));
+    scene.style.setProperty("--fit-top", `${(trim + above * fit + clear).toFixed(1)}px`);
+    scene.style.setProperty("--fit-bottom", `${(trim + PAGER * fit).toFixed(1)}px`);
+  }
+  addEventListener("resize", fitCard);
+
   function setView(next) {
     if (next !== "open" && unfolded) setFold(false);
     if (next === "open") startReveal();
@@ -177,6 +202,7 @@
     view = next;
     scene.dataset.view = view;
     for (const face of faces) face.inert = !VISIBLE[view].includes(face.id);
+    fitCard();
   }
   function nextView() {
     // With the pleat out, the paper first folds back to the plain spread.
@@ -198,7 +224,11 @@
       nextView();
     }
   });
+  // The first fit lands at once, without the transition.
+  scene.style.transition = "none";
   setView("cover");
+  scene.offsetWidth;
+  scene.style.transition = "";
 
   /* ---------- Callout (cover only): on hover; on touch screens, until the first tap ---------- */
   if (matchMedia("(hover: hover)").matches) {
@@ -263,8 +293,9 @@
       if (view !== forView) continue;
       const at = anchor.getBoundingClientRect();
       const frame = box.getBoundingClientRect();
-      const x = (at.left - frame.left).toFixed(2);
-      const y = (at.top - frame.top).toFixed(2);
+      // The callout sits inside the scaled scene: measure in its own units.
+      const x = ((at.left - frame.left) / fit).toFixed(2);
+      const y = ((at.top - frame.top) / fit).toFixed(2);
       line.setAttribute("x1", x);
       line.setAttribute("y1", y);
       dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
