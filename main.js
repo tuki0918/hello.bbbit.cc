@@ -164,6 +164,7 @@
   const SPAN = { cover: 0.5, open: 1, back: 0.5 };
   const stage = document.querySelector(".stage");
   const PAGER = 30; // the squares under the card, and their gap
+  const cornerControls = [languageToggle, document.querySelector(".repo-link")];
   let fit = 1;
 
   function fitCard() {
@@ -178,14 +179,18 @@
     const padTop = parseFloat(pad.paddingTop);
     const room = innerHeight - padTop - parseFloat(pad.paddingBottom);
     const measure = (clear) => Math.min(1, (room - clear) / (span + above + PAGER));
-    // Keep clear of the language toggle if the card would run under it.
-    const toggle = languageToggle.getBoundingClientRect();
+    // Keep clear of the corner controls (language toggle, GitHub link) if the card
+    // would run under them.
     fit = measure(0);
     let clear = 0;
-    if ((innerWidth + width * fit) / 2 > toggle.left - 4) {
-      clear = Math.max(0, toggle.bottom + 6 - padTop);
-      fit = measure(clear);
+    const half = (width * fit) / 2;
+    for (const corner of cornerControls) {
+      const box = corner.getBoundingClientRect();
+      if (innerWidth / 2 + half > box.left - 4 && innerWidth / 2 - half < box.right + 4) {
+        clear = Math.max(clear, box.bottom + 6 - padTop);
+      }
     }
+    if (clear > 0) fit = measure(clear);
     // The scene keeps its full layout box; these margins trim it to what the paper
     // covers once scaled (about its centre), so the page lays out around the card.
     const trim = ((span * fit) / 2 - height / 2);

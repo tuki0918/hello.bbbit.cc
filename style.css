@@ -137,7 +137,7 @@ body {
 .language-toggle:not([hidden]) {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
-  right: max(10px, env(safe-area-inset-right));
+  left: max(10px, env(safe-area-inset-left));
   z-index: 3;
   display: flex;
   align-items: center;
@@ -176,6 +176,35 @@ body {
 .language-toggle:hover {
   background: rgb(7 20 40 / 6%);
   color: var(--ink);
+}
+/* The card's source on GitHub: top right, opposite the language toggle and as quiet. */
+.repo-link {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--muted);
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+.repo-link svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.repo-link:hover {
+  background: rgb(7 20 40 / 6%);
+  color: var(--ink);
+}
+.repo-link:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
 }
 :root[lang="en"]:not(.lang-ready) [data-en] {
   visibility: hidden;
