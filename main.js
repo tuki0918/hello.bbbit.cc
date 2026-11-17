@@ -4,6 +4,11 @@
   const tilt = document.getElementById("tilt");
   const root = document.documentElement;
 
+  // X のプロフィールなどから ?s=x 付きで来た人には、X での名前で表示する。
+  if (new URLSearchParams(location.search).get("s") === "x") {
+    document.querySelector(".inner-name").textContent = "tuki0918";
+  }
+
   const languageToggle = document.querySelector(".language-toggle");
   const languageToggleLabel = languageToggle.querySelector(".language-toggle-label");
   // The toggle shows the language the card is in now; pressing it switches to the other.
