@@ -42,8 +42,11 @@ html {
 }
 body {
   margin: 0;
+  /* The glow is one screen tall: drawn once at the top, never tiled down a page
+     that scrolls (on a phone the opened card can push the Home button below). */
   background:
-    radial-gradient(120% 70% at 50% 0%, rgb(22 190 208 / 9%), transparent 60%), var(--canvas);
+    radial-gradient(120% 70% at 50% 0%, rgb(22 190 208 / 9%), transparent 60%) no-repeat,
+    var(--canvas);
   color: var(--ink);
   font-family: Manrope, "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
