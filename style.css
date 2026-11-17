@@ -751,6 +751,10 @@ body {
   object-position: 50% 100%;
   padding-top: 0.35em;
 }
+/* The X drawing is wider than tall, with its own ground line: give it side room. */
+.avatar-x {
+  padding: 0.6em 0.35em 0.45em;
+}
 .id-foot {
   justify-content: flex-start;
   margin-top: 1.2em;
