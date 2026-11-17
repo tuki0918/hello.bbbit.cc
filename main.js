@@ -8,7 +8,6 @@
   if (new URLSearchParams(location.search).get("s") === "x") {
     document.querySelector(".inner-name").textContent = "tuki0918";
     const avatar = document.querySelector(".avatar");
-    avatar.removeAttribute("srcset");
     avatar.src = "avatar-x.svg";
     avatar.classList.add("avatar-x");
   }
