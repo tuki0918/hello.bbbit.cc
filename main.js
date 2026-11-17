@@ -177,7 +177,11 @@
     const above = view !== "open" ? 4 * em : 0;
     const pad = getComputedStyle(stage);
     const padTop = parseFloat(pad.paddingTop);
-    const room = innerHeight - padTop - parseFloat(pad.paddingBottom);
+    // The layout viewport, not innerWidth/innerHeight: on phones those follow pinch
+    // zoom and the toolbars coming and going, and refitting on them never settles.
+    const viewWidth = root.clientWidth;
+    fitSize = `${viewWidth}x${root.clientHeight}`;
+    const room = root.clientHeight - padTop - parseFloat(pad.paddingBottom);
     const measure = (clear) => Math.min(1, (room - clear) / (span + above + PAGER));
     // Keep clear of the corner controls (language toggle, GitHub link) if the card
     // would run under them.
@@ -186,7 +190,7 @@
     const half = (width * fit) / 2;
     for (const corner of cornerControls) {
       const box = corner.getBoundingClientRect();
-      if (innerWidth / 2 + half > box.left - 4 && innerWidth / 2 - half < box.right + 4) {
+      if (viewWidth / 2 + half > box.left - 4 && viewWidth / 2 - half < box.right + 4) {
         clear = Math.max(clear, box.bottom + 6 - padTop);
       }
     }
@@ -198,7 +202,19 @@
     scene.style.setProperty("--fit-top", `${(trim + above * fit + clear).toFixed(1)}px`);
     scene.style.setProperty("--fit-bottom", `${(trim + PAGER * fit).toFixed(1)}px`);
   }
-  addEventListener("resize", fitCard);
+  // Refit only when the layout viewport really changes size (rotating the phone,
+  // resizing the window), once per frame. Zooming in and scrolling leave it alone.
+  let fitSize = "";
+  let fitFrame = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(fitFrame);
+    fitFrame = requestAnimationFrame(() => {
+      const size = `${root.clientWidth}x${root.clientHeight}`;
+      if (size === fitSize) return;
+      fitSize = size;
+      fitCard();
+    });
+  });
 
   function setView(next) {
     if (next !== "open" && unfolded) setFold(false);
