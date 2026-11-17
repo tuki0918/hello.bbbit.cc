@@ -194,6 +194,12 @@ body {
   perspective: 1400px;
   /* All inner sizes are in em so the card scales as one piece. */
   font-size: calc(var(--w) / 22);
+  transition: margin 0.7s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+/* Unfolded, the card is taller than the scene; --grow (from main.js) is how far it
+   reaches past the top and bottom, so the page makes room for it. */
+.scene.unfolded {
+  margin-block: var(--grow, 0px);
 }
 .tilt {
   width: 100%;
@@ -212,7 +218,9 @@ body {
   transform-style: preserve-3d;
   /* Folded, the card sits in the lower half; lift it to the middle. */
   transform: translateY(-25%);
-  transition: transform 0.9s cubic-bezier(0.3, 1.1, 0.4, 1);
+  transition:
+    transform 0.9s cubic-bezier(0.3, 1.1, 0.4, 1),
+    --pleat 0.7s cubic-bezier(0.3, 0.9, 0.3, 1);
   cursor: pointer;
   outline: none;
 }
@@ -230,6 +238,19 @@ body {
   height: 50%;
   transform-style: preserve-3d;
 }
+/* The tilt, the book and the panels are empty boxes in the same plane as the faces.
+   Once the card tilts, the browser can't tell which is in front and often picks
+   one of them, so a tap on a button misses. Only the faces take the pointer; clicks
+   on them still bubble up to the book. */
+.tilt,
+.book,
+.panel {
+  pointer-events: none;
+}
+.face,
+.pleat {
+  pointer-events: auto;
+}
 /* The fold is the flap's top edge: it swings up and over to open. */
 .flap {
   transform-origin: 50% 0;
@@ -238,6 +259,263 @@ body {
 }
 .scene[data-view="open"] .flap {
   transform: translateZ(0) rotateX(180deg);
+}
+
+/* ---------- Pleat: a panel folded away between the top and bottom ---------- */
+/* Two half-height faces, valley-folded back behind the centre fold. --pleat is the
+   angle each stands at: 90deg tucked away edge-on, 0deg flat. As they flatten they
+   push the top panel up and the bottom panel down by their height x cos(angle), so
+   the paper stays joined at all three folds. */
+@property --pleat {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 90deg;
+}
+.scene.unfolded .book {
+  --pleat: 0deg;
+  /* Half as tall again: main.js shrinks it (--fit) where the screen is too short. */
+  transform: scale(var(--fit, 1));
+}
+/* `translate`, not `transform`: these two already transition their transform, and
+   would trail behind the pleat if it were animated through that. */
+.flap {
+  translate: 0 calc(-50% * cos(var(--pleat)));
+}
+.base {
+  translate: 0 calc(50% * cos(var(--pleat)));
+}
+.pleat {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2.2em;
+  /* The same white paper as the profile panel above it. */
+  background: #fff;
+  color: var(--navy);
+  /* Hairlines down the sides only: none across the paper at the folds. */
+  box-shadow:
+    inset 1px 0 rgb(7 20 40 / 10%),
+    inset -1px 0 rgb(7 20 40 / 10%);
+  cursor: default;
+  visibility: hidden;
+  transition: visibility 0s 0.7s;
+}
+.scene.unfolded .pleat {
+  visibility: visible;
+  transition-delay: 0s;
+}
+.pleat-top {
+  top: 50%;
+  transform-origin: 50% 0;
+  transform: translateY(calc(-100% * cos(var(--pleat)))) rotateX(calc(-1 * var(--pleat)));
+}
+.pleat-bottom {
+  top: 25%;
+  transform-origin: 50% 100%;
+  transform: translateY(calc(100% * cos(var(--pleat)))) rotateX(var(--pleat));
+}
+/* No creases drawn on the paper: flat, it reads as one sheet with plain rules. The
+   rule under the profile panel runs edge to edge; the one between the two faces is
+   inset, like the rule under the avatar. */
+.pleat-top {
+  box-shadow:
+    inset 1px 0 rgb(7 20 40 / 10%),
+    inset -1px 0 rgb(7 20 40 / 10%),
+    inset 0 1px rgb(7 20 40 / 14%);
+}
+.pleat-bottom::before {
+  content: "";
+  position: absolute;
+  left: 2.2em;
+  right: 2.2em;
+  top: 0;
+  height: 1px;
+  background: rgb(7 20 40 / 14%);
+}
+/* The fold's shading on the panels above and below goes while the pleat is out,
+   and so does the profile panel's own hairline along that edge. */
+.inner-top::after,
+.inner-bottom::before {
+  transition: opacity 0.3s;
+}
+.scene.unfolded .inner-top::after,
+.scene.unfolded .inner-bottom::before {
+  opacity: 0;
+}
+.scene.unfolded .inner-top {
+  box-shadow:
+    inset 1px 0 rgb(7 20 40 / 10%),
+    inset -1px 0 rgb(7 20 40 / 10%),
+    inset 0 1px rgb(7 20 40 / 10%);
+}
+/* Only while the faces stand up, they darken like paper turned from the light. */
+.pleat::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--navy);
+  opacity: calc(sin(var(--pleat)) * 0.6);
+}
+.work-open {
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  color: var(--navy);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.work-open span {
+  font-size: 0.56em;
+  letter-spacing: 0.04em;
+}
+.work-open svg {
+  width: 0.75em;
+  height: 0.75em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Six cells across the text column: five works and the "more" tile. Each button
+   fills its whole cell, so there is no dead space between the icons to miss into. */
+.works-apps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  list-style: none;
+  /* Half a cell's spare width either side, so the first and last icons sit flush
+     with the text column while the gaps between them stay wide. */
+  margin: 0 -0.32em;
+  padding: 0;
+}
+.work {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  appearance: none;
+  padding: 1em 0 1.2em;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.work img,
+.more-tile {
+  display: block;
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 22%;
+  background: #eef1f4;
+  transition:
+    transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1),
+    box-shadow 0.2s,
+    background-color 0.2s;
+}
+.work img {
+  box-shadow: 0 0.1em 0.3em rgb(7 20 40 / 18%);
+}
+@media (hover: hover) {
+  .work:hover img,
+  .work:hover .more-tile {
+    transform: translateY(-0.12em);
+  }
+}
+.work[aria-pressed="true"] img {
+  transform: translateY(-0.12em) scale(1.08);
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px var(--cyan),
+    0 0.25em 0.5em rgb(7 20 40 / 22%);
+}
+/* The logo's square marks the one that is described below. */
+.work::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.4em;
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: -0.15em;
+  background: var(--cyan);
+  transform: scale(0);
+  transition: transform 0.2s;
+}
+.work[aria-pressed="true"]::after {
+  transform: scale(1);
+}
+/* The last tile is a plus: more works, on the full list. */
+.more-tile {
+  display: grid;
+  place-items: center;
+}
+.more-tile svg {
+  width: 1.2em;
+  height: 1.2em;
+  fill: none;
+  stroke: var(--navy);
+  stroke-width: 2.2;
+  stroke-linecap: square;
+}
+.work-more:hover .more-tile {
+  background: #dce4eb;
+}
+.work:focus-visible {
+  outline: none;
+}
+.work:focus-visible img,
+.work:focus-visible .more-tile {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.work-detail {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.1em;
+}
+.work-text {
+  flex: 1;
+  min-width: 0;
+}
+.work-name {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 1.15em;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.work-desc {
+  margin: 0.6em 0 0;
+  font-size: 0.58em;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #4a5769;
+}
+.work-open {
+  flex: none;
+  min-height: 24px;
+  padding: 0.55em 0.7em;
+  background: var(--navy);
+  color: #fff;
+}
+.work-open:hover {
+  background: #0d2a52;
 }
 
 .face {
@@ -474,6 +752,11 @@ body {
 }
 /* Match the width and background of the avatar above. */
 .works-link {
+  appearance: none;
+  border: 0;
+  /* A button keeps its own font size unless told otherwise; the widths here are in the card's em. */
+  font-size: inherit;
+  cursor: pointer;
   position: absolute;
   left: 0;
   display: flex;
@@ -502,9 +785,17 @@ body {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform 0.3s;
 }
 .works-link:hover {
   background: #dce4eb;
+}
+.works-link[aria-expanded="true"] {
+  background: var(--navy);
+  color: #fff;
+}
+.works-link[aria-expanded="true"] svg {
+  transform: rotate(180deg);
 }
 .socials {
   display: flex;
@@ -894,6 +1185,9 @@ body {
 .scene[data-view="open"] .shadow {
   bottom: -4%;
 }
+.scene.unfolded .shadow {
+  bottom: calc(-4% - var(--grow, 0px));
+}
 
 /* ---------- Callout ---------- */
 .callout {
@@ -1039,6 +1333,9 @@ body {
 .scene[data-view="open"] .pager {
   top: calc(100% + 22px);
 }
+.scene.unfolded .pager {
+  top: calc(100% + var(--grow, 0px) + 22px);
+}
 .pager span {
   width: 6px;
   height: 6px;
@@ -1123,6 +1420,7 @@ body {
 .language-toggle:focus-visible,
 .btn:focus-visible,
 .works-link:focus-visible,
+.work-open:focus-visible,
 .socials a:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
@@ -1149,6 +1447,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .book,
   .flap,
+  .scene,
   .shadow,
   .pager,
   .actions,

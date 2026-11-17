@@ -107,7 +107,71 @@
     }, total + 100);
   }
 
+  /* ---------- Pleat: the WORKS panel folded between the top and bottom ---------- */
+  const worksToggle = document.getElementById("works-toggle");
+  const pleats = [...document.querySelectorAll(".pleat")];
+  const FOLD_LABEL = { false: ["WORKS をひらく", "Unfold WORKS"], true: ["WORKS をたたむ", "Fold WORKS away"] };
+  let unfolded = false;
+
+  // Unfolded, the card is half as tall again. Shrink it to fit short screens, and
+  // tell the layout how far it reaches past the scene's own box.
+  function fitFold() {
+    const height = scene.offsetHeight;
+    const fit = Math.min(1, (innerHeight - 210) / (height * 1.5));
+    scene.style.setProperty("--fit", fit.toFixed(4));
+    scene.style.setProperty("--grow", `${Math.max(0, ((1.5 * fit - 1) * height) / 2).toFixed(1)}px`);
+  }
+
+  function setFold(open) {
+    unfolded = open;
+    if (open) fitFold();
+    scene.classList.toggle("unfolded", open);
+    worksToggle.setAttribute("aria-expanded", String(open));
+    const label = attributeTranslations.find((each) => each.element === worksToggle);
+    [label.ja, label.en] = FOLD_LABEL[open];
+    worksToggle.setAttribute("aria-label", label[root.lang === "en" ? "en" : "ja"]);
+    for (const pleat of pleats) pleat.inert = !open;
+  }
+  worksToggle.addEventListener("click", () => setFold(!unfolded));
+  addEventListener("resize", () => {
+    if (unfolded) fitFold();
+  });
+
+  // The app icons: tapping one describes it on the lower half of the pleat.
+  const works = [...document.querySelectorAll("button.work")];
+  const workDetail = document.querySelector(".work-detail");
+  const workName = workDetail.querySelector(".work-name");
+  const workDesc = workDetail.querySelector(".work-desc");
+  const workOpen = workDetail.querySelector(".work-open");
+  let selectedWork = works[0];
+
+  function renderWork() {
+    for (const work of works) work.setAttribute("aria-pressed", String(work === selectedWork));
+    const { name, href, desc, descEn } = selectedWork.dataset;
+    workName.textContent = name;
+    workDesc.textContent = root.lang === "en" ? descEn : desc;
+    workOpen.href = href;
+  }
+  for (const work of works) {
+    work.addEventListener("click", () => {
+      if (work === selectedWork) return;
+      selectedWork = work;
+      renderWork();
+      if (reduceMotion) return;
+      workDetail.animate(
+        [
+          { opacity: 0, transform: "translateY(0.4em)" },
+          { opacity: 1, transform: "none" },
+        ],
+        { duration: 260, easing: "ease-out" },
+      );
+    });
+  }
+  renderWork();
+  languageToggle.addEventListener("click", renderWork); // after setLanguage has run
+
   function setView(next) {
+    if (next !== "open" && unfolded) setFold(false);
     if (next === "open") startReveal();
     if (next !== "cover") prepareQr();
     view = next;
@@ -115,6 +179,11 @@
     for (const face of faces) face.inert = !VISIBLE[view].includes(face.id);
   }
   function nextView() {
+    // With the pleat out, the paper first folds back to the plain spread.
+    if (unfolded) {
+      setFold(false);
+      return;
+    }
     setView(ORDER[(ORDER.indexOf(view) + 1) % ORDER.length]);
   }
   book.addEventListener("click", (event) => {

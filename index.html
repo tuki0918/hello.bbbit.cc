@@ -146,10 +146,11 @@
                   </div>
                 </div>
                 <div class="id-foot">
-                  <a class="works-link" href="https://bbbit.cc/works" target="_blank" rel="noopener noreferrer">
+                  <!-- 押すと、上面と下面のあいだに折り込まれた WORKS の面がひらく。 -->
+                  <button type="button" class="works-link" id="works-toggle" aria-expanded="false" aria-controls="works" aria-label="WORKS をひらく" data-en-label="Unfold WORKS">
                     <span>WORKS</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
-                  </a>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                  </button>
                   <ul class="socials">
                     <li>
                       <a href="https://github.com/tuki0918" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
@@ -185,6 +186,29 @@
                 </div>
               </section>
             </div>
+
+            <!-- 上面と下面のあいだに谷折りで畳まれた面。WORKS を押すと上下がひらいて平らになる。
+                 上の半分はアプリのアイコン、下の半分は選んだものの紹介。 -->
+            <section class="pleat pleat-top" id="works" aria-label="WORKS" inert>
+              <ul class="works-apps">
+                  <li><button type="button" class="work" aria-pressed="false" aria-label="Eagle Inbox" data-name="Eagle Inbox" data-href="https://bbbit.cc/works/eagle-inbox" data-desc="iPhoneの写真・ファイル・URLを、Eagleへ直接送信。" data-desc-en="Send photos, files and URLs from your iPhone straight to Eagle."><img src="https://bbbit.cc/images/eagle-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
+                  <li><button type="button" class="work" aria-pressed="false" aria-label="Media Preview Server" data-name="Media Preview Server" data-href="https://bbbit.cc/works/media-preview-server" data-desc="Eagleのライブラリを、LAN内の端末から閲覧。" data-desc-en="Browse your Eagle library from any device on your LAN."><img src="https://bbbit.cc/images/media-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
+                  <li><button type="button" class="work" aria-pressed="false" aria-label="Library Analysis" data-name="Library Analysis" data-href="https://bbbit.cc/works/library-analysis" data-desc="Eagleの容量を分析し、素材の整理を支援。" data-desc-en="See what fills your Eagle library, and tidy it up."><img src="https://bbbit.cc/images/analysis-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
+                  <li><button type="button" class="work" aria-pressed="false" aria-label="RAW EXIF Metadata" data-name="RAW EXIF Metadata" data-href="https://bbbit.cc/works/raw-exif-inspector" data-desc="画像のメタデータを、Eagle上で確認・コピー。" data-desc-en="View and copy image metadata inside Eagle."><img src="https://bbbit.cc/images/raw-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
+                  <li><button type="button" class="work" aria-pressed="false" aria-label="VR Player" data-name="VR Player" data-href="https://bbbit.cc/works/360-media-viewer" data-desc="VR180・VR360の動画と画像を、デスクトップで確認。" data-desc-en="Check VR180 / VR360 videos and images on the desktop."><img src="https://bbbit.cc/images/vr-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
+                  <!-- 最後のタイルは作品ではなく、一覧ページへの入口。 -->
+                  <li><a class="work work-more" href="https://bbbit.cc/works" target="_blank" rel="noopener noreferrer" aria-label="ほかの作品も見る" data-en-label="See more works" title="and more"><span class="more-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></span></a></li>
+              </ul>
+            </section>
+            <section class="pleat pleat-bottom" aria-label="選んだ作品" data-en-label="Selected work" aria-live="polite" inert>
+              <div class="work-detail">
+                <div class="work-text">
+                  <h3 class="work-name"></h3>
+                  <p class="work-desc"></p>
+                </div>
+                <a class="work-open" target="_blank" rel="noopener noreferrer"><span data-en="Details">詳しく</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg></a>
+              </div>
+            </section>
           </div>
         </div>
         <div class="shadow" aria-hidden="true"></div>
