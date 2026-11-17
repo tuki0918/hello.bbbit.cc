@@ -71,8 +71,12 @@
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let revealStarted = false;
 
+  // On phones the 120 flashing cells, painted inside the 3D card, flicker; there the
+  // inside is simply shown.
+  const touchScreen = matchMedia("(pointer: coarse)").matches;
+
   function startReveal() {
-    if (reduceMotion || revealStarted) return;
+    if (reduceMotion || touchScreen || revealStarted) return;
     revealStarted = true;
     // The sweep runs from the top edge down. The top panel is the back of the flap, so
     // it only comes into view once the flap swings past halfway (about 0.15s in);
@@ -180,9 +184,15 @@
     // The layout viewport, not innerWidth/innerHeight: on phones those follow pinch
     // zoom and the toolbars coming and going, and refitting on them never settles.
     const viewWidth = root.clientWidth;
-    fitSize = `${viewWidth}x${root.clientHeight}`;
     const room = root.clientHeight - padTop - parseFloat(pad.paddingBottom);
-    const measure = (clear) => Math.min(1, (room - clear) / (span + above + PAGER));
+    // Right after a reload a phone can report a viewport or card with no size yet.
+    // Fitting to that would shrink the card to nothing; wait for a real layout.
+    if (!(height > 0) || !(room > 0)) {
+      fitSize = "";
+      return;
+    }
+    fitSize = sizeKey();
+    const measure = (clear) => Math.min(1, Math.max(0.3, (room - clear) / (span + above + PAGER)));
     // Keep clear of the corner controls (language toggle, GitHub link) if the card
     // would run under them.
     fit = measure(0);
@@ -202,18 +212,27 @@
     scene.style.setProperty("--fit-top", `${(trim + above * fit + clear).toFixed(1)}px`);
     scene.style.setProperty("--fit-bottom", `${(trim + PAGER * fit).toFixed(1)}px`);
   }
-  // Refit only when the layout viewport really changes size (rotating the phone,
-  // resizing the window), once per frame. Zooming in and scrolling leave it alone.
+  // Refit only when the layout viewport or the card's own size really changes
+  // (rotating the phone, resizing the window, the page settling after a reload), at
+  // most once a frame. Zooming in and scrolling change neither, so they leave it alone.
   let fitSize = "";
   let fitFrame = 0;
-  addEventListener("resize", () => {
+  const sizeKey = () => `${root.clientWidth}x${root.clientHeight}x${scene.offsetWidth}`;
+  function requestFit() {
     cancelAnimationFrame(fitFrame);
     fitFrame = requestAnimationFrame(() => {
-      const size = `${root.clientWidth}x${root.clientHeight}`;
-      if (size === fitSize) return;
-      fitSize = size;
-      fitCard();
+      if (sizeKey() !== fitSize) fitCard();
     });
+  }
+  addEventListener("resize", requestFit);
+  // The viewport (the root fills it) and the card, measured after layout. This also
+  // runs once as soon as the page is laid out.
+  new ResizeObserver(requestFit).observe(root);
+  new ResizeObserver(requestFit).observe(scene);
+  // Coming back to the page (reload, back/forward): measure again from scratch.
+  addEventListener("pageshow", () => {
+    fitSize = "";
+    requestFit();
   });
 
   function setView(next) {
