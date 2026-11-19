@@ -6,10 +6,87 @@
 
   // X のプロフィールなどから ?s=x 付きで来た人には、X での名前とアバターで表示する。
   if (new URLSearchParams(location.search).get("s") === "x") {
-    document.querySelector(".inner-name").textContent = "tuki0918";
-    const avatar = document.querySelector(".avatar");
-    avatar.src = "avatar-x.svg";
-    avatar.classList.add("avatar-x");
+    const baseProfile = document.getElementById("profile-base");
+    const baseName = baseProfile.querySelector(".inner-name");
+    const upperPanel = baseProfile.parentElement;
+    const peelHandle = upperPanel.querySelector(".profile-peel");
+
+    // Copy the print layout. The original WORKS and social controls are shared by both sheets.
+    const front = baseProfile.cloneNode(true);
+    front.removeAttribute("id");
+    front.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
+    front.querySelector(".inner-name").textContent = "tuki0918";
+    front.querySelector(".avatar").src = "avatar-x.svg";
+    baseName.setAttribute("aria-label", "tuki0918");
+
+    const sticker = document.createElement("div");
+    sticker.className = "profile-sticker";
+    sticker.inert = true;
+    sticker.setAttribute("aria-hidden", "true");
+    sticker.append(front);
+    peelHandle.before(sticker);
+    peelHandle.hidden = false;
+
+    let drag = null;
+    let suppressClick = false;
+
+    function peelSticker() {
+      peelHandle.setAttribute("aria-expanded", "true");
+      peelHandle.setAttribute("aria-disabled", "true");
+      baseName.removeAttribute("aria-label");
+      if (document.activeElement === peelHandle) {
+        baseName.tabIndex = -1;
+        baseName.focus({ preventScroll: true });
+      }
+    }
+
+    window.addEventListener("pointerdown", (event) => {
+      if (event.isPrimary) suppressClick = false;
+    }, true);
+    peelHandle.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || event.button !== 0 || peelHandle.hasAttribute("aria-disabled")) return;
+      const { width, height } = upperPanel.getBoundingClientRect();
+      drag = {
+        id: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        width,
+        height,
+        start: parseFloat(getComputedStyle(upperPanel).getPropertyValue("--sticker-peel")),
+        progress: 0,
+      };
+      peelHandle.setPointerCapture(event.pointerId);
+    });
+    // The pointer can leave the corner and cross either panel during a peel.
+    window.addEventListener("pointermove", (event) => {
+      if (drag?.id !== event.pointerId) return;
+      const x = event.clientX - drag.x;
+      const y = event.clientY - drag.y;
+      if (!suppressClick && Math.hypot(x, y) < 5) return;
+      suppressClick = true;
+      event.stopPropagation();
+      drag.progress = Math.min(1, Math.max(0, x / drag.width - y / drag.height));
+      upperPanel.classList.add("dragging");
+      upperPanel.style.setProperty("--sticker-peel", `${drag.start + drag.progress * (200 - drag.start)}%`);
+    }, true);
+    function endDrag(event) {
+      if (drag?.id !== event.pointerId) return;
+      if (event.type === "pointerup" && drag.progress >= 0.3) peelSticker();
+      drag = null;
+      upperPanel.classList.remove("dragging");
+      upperPanel.style.removeProperty("--sticker-peel");
+    }
+    window.addEventListener("pointerup", endDrag, true);
+    window.addEventListener("pointercancel", endDrag, true);
+    window.addEventListener("click", (event) => {
+      if (!suppressClick || event.detail === 0) return;
+      suppressClick = false;
+      event.stopPropagation();
+      event.preventDefault();
+    }, true);
+    peelHandle.addEventListener("click", () => {
+      if (!peelHandle.hasAttribute("aria-disabled")) peelSticker();
+    });
   }
 
   const languageToggle = document.querySelector(".language-toggle");
