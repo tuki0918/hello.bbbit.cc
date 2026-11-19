@@ -454,6 +454,119 @@
   scene.offsetWidth;
   scene.style.transition = "";
 
+  /* ---------- Konami code ---------- */
+  const konamiCode = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a"];
+  const recentKeys = [];
+  const backdrop = document.querySelector(".backdrop");
+  const backdropBits = [...backdrop.querySelectorAll(".bit")].sort((a, b) =>
+    Number(a.style.getPropertyValue("--x")) - Number(b.style.getPropertyValue("--x")),
+  );
+  backdropBits.forEach((bit, index) => bit.style.setProperty("--wave-delay", `${index * 35}ms`));
+  const helloGlyphs = [
+    ["101", "101", "111", "101", "101"], // H
+    ["111", "100", "110", "100", "111"], // E
+    ["100", "100", "100", "100", "111"], // L
+    ["100", "100", "100", "100", "111"], // L
+    ["111", "101", "101", "101", "111"], // O
+  ];
+  const helloColumns = helloGlyphs.length * 4 - 1;
+  const helloRows = helloGlyphs[0].length;
+  let helloTimeout;
+
+  function fitBackdropHello(hello) {
+    // The backdrop grid crosses the centre of the screen along both axes.
+    const { width, height } = backdrop.getBoundingClientRect();
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const baseCell = backdropBits[0].getBoundingClientRect().width + 1;
+    const visible = faces.filter((face) => !face.inert);
+    if (!contactPanel.inert) visible.push(contactPanel);
+    const boxes = visible.map((element) => element.getBoundingClientRect());
+    const spaces = [
+      { left: 0, right: width, top: 0, bottom: Math.min(height, ...boxes.map((box) => box.top)) },
+      { left: 0, right: width, top: Math.max(0, ...boxes.map((box) => box.bottom)), bottom: height },
+      { left: 0, right: Math.min(width, ...boxes.map((box) => box.left)), top: 0, bottom: height },
+      { left: Math.max(0, ...boxes.map((box) => box.right)), right: width, top: 0, bottom: height },
+    ];
+    function gridStart(min, max, center, cell, length) {
+      const first = Math.ceil((min + 8 - center) / cell);
+      const last = Math.floor((max - 8 - center) / cell) - length;
+      if (first > last) return null;
+      const ideal = Math.round(((min + max) / 2 - center) / cell - length / 2);
+      return Math.max(first, Math.min(last, ideal));
+    }
+    function position(division, x, y) {
+      backdrop.style.setProperty("--hello-division", division);
+      hello.style.setProperty("--hello-x", x);
+      hello.style.setProperty("--hello-y", y);
+    }
+
+    // Keep the original squares when they fit. Subdivisions share the same grid lines.
+    const maxDivision = Math.max(1, Math.ceil(baseCell / 3));
+    for (let division = 1; division <= maxDivision; division++) {
+      const cell = baseCell / division;
+      for (const space of spaces) {
+        const x = gridStart(space.left, space.right, centerX, cell, helloColumns);
+        const y = gridStart(space.top, space.bottom, centerY, cell, helloRows);
+        if (x === null || y === null) continue;
+        position(division, x, y);
+        return;
+      }
+    }
+    position(maxDivision, -Math.floor(helloColumns / 2), Math.ceil((8 - centerY) / (baseCell / maxDivision)));
+  }
+
+  function showBackdropHello() {
+    const hello = document.createElement("div");
+    hello.className = "backdrop-hello";
+    hello.style.gridTemplateColumns = `repeat(${helloColumns}, var(--grid-cell))`;
+    helloGlyphs.forEach((glyph, letter) => glyph.forEach((row, y) => {
+      [...row].forEach((filled, x) => {
+        if (filled === "0") return;
+        const dot = document.createElement("span");
+        const column = letter * 4 + x + 1;
+        dot.style.gridColumn = column;
+        dot.style.gridRow = y + 1;
+        dot.style.setProperty("--hello-column", column - 1);
+        hello.append(dot);
+      });
+    }));
+
+    clearTimeout(helloTimeout);
+    backdrop.querySelector(".backdrop-hello")?.remove();
+    backdrop.classList.remove("konami");
+    backdrop.offsetWidth; // Restart the wave when the code is entered again.
+    backdrop.classList.add("konami");
+    fitBackdropHello(hello);
+    backdrop.append(hello);
+    helloTimeout = setTimeout(() => {
+      hello.remove();
+      backdrop.classList.remove("konami");
+      backdrop.style.removeProperty("--hello-division");
+    }, 3900);
+  }
+
+  window.addEventListener("resize", () => {
+    const hello = backdrop.querySelector(".backdrop-hello");
+    if (hello) fitBackdropHello(hello);
+  });
+
+  window.addEventListener("keydown", (event) => {
+    const target = event.target;
+    if (event.isComposing || (target instanceof HTMLElement &&
+        (target.isContentEditable || target.closest("input, textarea, select")))) {
+      recentKeys.length = 0;
+      return;
+    }
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || event.key === "Shift") return;
+    recentKeys.push(event.key.toLowerCase());
+    if (recentKeys.length > konamiCode.length) recentKeys.shift();
+    if (recentKeys.length === konamiCode.length && konamiCode.every((key, index) => key === recentKeys[index])) {
+      recentKeys.length = 0;
+      showBackdropHello();
+    }
+  });
+
   /* ---------- Callout (cover only): on hover; on touch screens, until the first tap ---------- */
   if (matchMedia("(hover: hover)").matches) {
     // The book element is as tall as the opened card; only the paper itself counts.
