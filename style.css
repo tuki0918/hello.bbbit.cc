@@ -42,8 +42,7 @@ html {
 }
 body {
   margin: 0;
-  /* The glow is one screen tall: drawn once at the top, never tiled down a page
-     that scrolls (on a phone the opened card can push the Home button below). */
+  /* The glow is one screen tall and never repeats as the page scrolls. */
   background:
     radial-gradient(120% 70% at 50% 0%, rgb(22 190 208 / 9%), transparent 60%) no-repeat,
     var(--canvas);
@@ -1499,32 +1498,6 @@ body {
 }
 
 /* ---------- Controls ---------- */
-/* The two buttons only appear while the card is open; on the cover and the back
-   they are hidden (and out of the tab order), with their space kept so nothing
-   jumps. They sit side by side, each as wide as the widest one. */
-.actions {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 10px;
-  width: max-content;
-  margin-top: calc(14px + var(--w) * 0.08);
-  transition:
-    opacity 0.4s ease-out 0.45s,
-    transform 0.4s ease-out 0.45s,
-    translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
-    visibility 0s 0.45s;
-}
-.scene:not([data-view="open"]) ~ .actions {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.15s,
-    transform 0.15s,
-    translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
-    visibility 0s 0.15s;
-}
 .btn {
   display: inline-flex;
   align-items: center;
@@ -1560,14 +1533,6 @@ body {
 }
 .btn:active {
   transform: scale(0.96);
-}
-.actions .btn {
-  border-color: transparent;
-  background: rgb(7 20 40 / 8%);
-  color: var(--navy);
-}
-.actions .btn:hover {
-  background: rgb(7 20 40 / 14%);
 }
 .language-toggle:focus-visible,
 .btn:focus-visible,
@@ -1744,9 +1709,6 @@ body {
   .stage.contact-open {
     justify-content: flex-start;
   }
-  .stage.contact-open .scene:not([data-view="open"]) ~ .actions {
-    display: none;
-  }
   .contact-surface {
     translate: 0 100dvh;
     transition: translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1);
@@ -1760,7 +1722,7 @@ body {
     --contact-gap: clamp(26px, 4vw, 52px);
     --contact-width: min(460px, calc(100vw - var(--w) - var(--contact-gap) - 48px));
   }
-  .stage.contact-open :is(.scene, .actions) {
+  .stage.contact-open .scene {
     translate: calc((var(--contact-width) + var(--contact-gap)) / -2) 0;
   }
   .contact-panel {
@@ -1789,8 +1751,7 @@ body {
   }
 }
 
-/* Short landscape screens: the card is sized by its width here, and main.js shrinks
-   it to the height for each state. The Home button may fall below the fold. */
+/* Short landscape screens: give the card a width limit and let main.js fit its height. */
 @media (orientation: landscape) and (max-height: 500px) {
   :root {
     --w: min(88vw, 420px, calc(100vw - max(12px, env(safe-area-inset-left)) - max(12px, env(safe-area-inset-right))));
@@ -1811,7 +1772,6 @@ body {
   .scene,
   .shadow,
   .pager,
-  .actions,
   .contact-panel,
   .contact-surface,
   .tilt {
