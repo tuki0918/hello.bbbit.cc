@@ -36,7 +36,15 @@
       const invitation = english
         ? "Leave your GitHub username in the contributor list."
         : "記念に、あなたのGitHubユーザー名を参加者一覧に残しませんか？";
-      console.info(`%c🏆 ${completion}%c ${invitation} ${document.querySelector(".repo-link").href}#contributors`, achievementBadgeStyle, "");
+      const instructions = english
+        ? "Add your GitHub username on a new line at the end of CONTRIBUTORS.txt and open a pull request."
+        : "CONTRIBUTORS.txt の末尾に自分のGitHubユーザー名を1行追加して、プルリクエストを送ってください。";
+      const editUrl = `${document.querySelector(".repo-link").href}/edit/main/CONTRIBUTORS.txt`;
+      console.info(
+        `%c🏆 ${completion}%c ${invitation}\n${instructions}\n${editUrl}`,
+        achievementBadgeStyle,
+        "",
+      );
     }
   }
 
