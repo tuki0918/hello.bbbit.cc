@@ -55,7 +55,7 @@ async function register({ repository, token, number, apiUrl }) {
         Accept: "application/vnd.github+json",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "X-GitHub-Api-Version": "2022-11-28",
+        "X-GitHub-Api-Version": "2026-03-10",
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     }).then(async (response) => {
@@ -102,6 +102,28 @@ async function register({ repository, token, number, apiUrl }) {
       });
     }
     if (await latestRequest()) await api("PATCH", sourcePath, { state: "closed" });
+  }
+
+  async function requireBuild(branch, head) {
+    // GITHUB_TOKEN-created PRs can leave pull_request runs waiting for approval.
+    const dispatch = await api("POST", "/actions/workflows/pr-ci.yml/dispatches", { ref: branch });
+    const runId = dispatch?.workflow_run_id;
+    if (!Number.isSafeInteger(runId) || runId < 1) {
+      throw new Error("GitHub did not return the registration CI run ID.");
+    }
+    const runUrl = `${webUrl}/actions/runs/${runId}`;
+    console.log(`Waiting for registration CI: ${runUrl}`);
+    const deadline = Date.now() + 120_000;
+    while (Date.now() < deadline) {
+      const run = await api("GET", `/actions/runs/${runId}`);
+      if (run.head_sha !== head) throw new Error(`Registration CI ran on an unexpected commit: ${runUrl}`);
+      if (run.status === "completed") {
+        if (run.conclusion === "success") return;
+        throw new Error(`Registration CI finished with ${run.conclusion}: ${runUrl}`);
+      }
+      await delay(4000);
+    }
+    throw new Error(`Registration CI timed out: ${runUrl}`);
   }
 
   const mergeMethod = repo.allow_squash_merge ? "squash" : repo.allow_merge_commit ? "merge" : "rebase";
@@ -151,6 +173,7 @@ async function register({ repository, token, number, apiUrl }) {
       throw new Error("The registration PR does not match the generated commit.");
     }
     const registrationPath = `/pulls/${registration.number}`;
+    await requireBuild(branch, normalizedHead);
     for (const wait of [0, 1000, 2000]) {
       if (wait) await delay(wait); // GitHub may still be calculating mergeability.
       if (!await latestRequest()) {
