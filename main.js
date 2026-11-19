@@ -282,10 +282,15 @@
   const contactTitle = document.getElementById("contact-title");
   const contactClose = contactPanel.querySelector(".contact-close");
   const contactForm = document.getElementById("contact-form");
+  const contactTopic = document.getElementById("contact-type");
   const contactStatus = contactPanel.querySelector(".contact-status");
   const contactMessages = {
     incomplete: { ja: "お名前とご相談内容を入力してください。", en: "Enter your name and message." },
     mail: { ja: "メールアプリで内容をご確認のうえ、送信してください。", en: "Review and send your message in your email app." },
+  };
+  const contactMailLabels = {
+    ja: { subject: "お問い合わせ", name: "お名前", email: "メールアドレス", company: "会社名・団体名", topic: "お問い合わせの種類" },
+    en: { subject: "Inquiry", name: "Name", email: "Email address", company: "Organization", topic: "Topic" },
   };
   let contactMessage = "";
 
@@ -324,9 +329,17 @@
       showContactMessage("incomplete");
       return;
     }
-    const type = data.get("type");
-    const subject = `[bbbit] ${type || "お問い合わせ"} / ${name}`;
-    const body = `お名前: ${name}\nメールアドレス: ${data.get("email")}\n会社名・団体名: ${data.get("company").trim() || "—"}\nお問い合わせの種類: ${type || "—"}\n\n${message}`;
+    const labels = contactMailLabels[root.lang];
+    const topic = contactTopic.value ? contactTopic.selectedOptions[0].textContent.trim() : "";
+    const subject = `[bbbit] ${topic || labels.subject} / ${name}`;
+    const body = [
+      `${labels.name}: ${name}`,
+      `${labels.email}: ${data.get("email")}`,
+      `${labels.company}: ${data.get("company").trim() || "—"}`,
+      `${labels.topic}: ${topic || "—"}`,
+      "",
+      message,
+    ].join("\n");
     const mail = document.createElement("a");
     mail.href = `mailto:${contactTrigger.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     showContactMessage("mail");
