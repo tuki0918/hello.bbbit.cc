@@ -164,6 +164,14 @@ async function register({ repository, token, number, apiUrl }) {
         ...(mergeMethod === "rebase" ? {} : { commit_title: title, commit_message: coAuthor }),
       }, [405, 409, 422]);
       if (merged?.merged) {
+        try {
+          const currentRef = await api("GET", refPath, undefined, [404]);
+          if (currentRef?.object.sha === normalizedHead) {
+            await api("DELETE", `/git/refs/heads/${branch}`, undefined, [404]);
+          }
+        } catch (error) {
+          console.warn(`Could not delete merged registration branch ${branch}: ${error.message}`);
+        }
         await finishRequest(`${webUrl}/pull/${registration.number}`);
         return;
       }

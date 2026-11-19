@@ -220,31 +220,52 @@ body {
   background: rgb(7 20 40 / 6%);
   color: var(--ink);
 }
-.repo-link {
+.repo-links {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
   right: max(10px, env(safe-area-inset-right));
   z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
+  display: flex;
+}
+.repo-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 999px;
   color: var(--muted);
+  text-decoration: none;
   transition:
     color 0.15s,
     background-color 0.15s;
+}
+.repo-stat {
+  gap: 4px;
+  padding-inline: 7px;
+  white-space: nowrap;
+  font: 600 12px / 1 var(--font-en);
+  font-variant-numeric: tabular-nums;
+}
+.repo-stat svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .repo-link svg {
   width: 20px;
   height: 20px;
   fill: currentColor;
 }
-.repo-link:hover {
+.repo-links a:hover {
   background: rgb(7 20 40 / 6%);
   color: var(--ink);
 }
-.repo-link:focus-visible {
+.repo-links a:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
