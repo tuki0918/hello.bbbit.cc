@@ -777,7 +777,6 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  filter: drop-shadow(0 2px 3px rgb(7 20 40 / 18%));
 }
 .profile-sticker .profile-sheet {
   background: #fff;
@@ -790,13 +789,17 @@ body {
     var(--crease-left)
   );
 }
+.profile-sticker .profile-sheet,
+.inner-top:has(.profile-sticker)::before {
+  mask: linear-gradient(#000 0 0), var(--works-opening), var(--socials-opening);
+  mask-composite: exclude, add;
+}
 .profile-sticker .avatar {
   padding: 0.6em 0.45em 0.3em;
 }
-.profile-sticker .id-foot {
+.profile-sticker .id-foot > * {
   visibility: hidden;
 }
-.inner-top:has(.profile-sticker) #profile-base .id-foot,
 .inner-top:has(.profile-sticker)::after {
   z-index: 2;
 }

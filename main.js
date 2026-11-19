@@ -27,6 +27,30 @@
     peelHandle.before(sticker);
     peelHandle.hidden = false;
 
+    const worksButton = baseProfile.querySelector(".works-link");
+    const footer = worksButton.parentElement;
+    const socials = footer.querySelector(".socials");
+    function fitStickerOpenings() {
+      // Use the untransformed layout so the opening stays aligned as the card tilts.
+      const gap = 4;
+      const left = footer.offsetLeft + footer.clientLeft - gap;
+      const top = footer.offsetTop + footer.clientTop - gap;
+      function opening(element, right) {
+        const x = left + element.offsetLeft;
+        const y = top + element.offsetTop;
+        const width = right === undefined ? element.offsetWidth + gap * 2 : right - x;
+        const height = element.offsetHeight + gap * 2;
+        return `linear-gradient(#000 0 0) ${x}px ${y}px / ${width}px ${height}px no-repeat`;
+      }
+      upperPanel.style.setProperty("--works-opening", opening(worksButton));
+      upperPanel.style.setProperty("--socials-opening", opening(socials, footer.offsetLeft + footer.offsetWidth));
+    }
+    fitStickerOpenings();
+    const openingObserver = new ResizeObserver(fitStickerOpenings);
+    for (const element of [baseProfile, baseProfile.querySelector(".id-row"), footer, worksButton, socials]) {
+      openingObserver.observe(element);
+    }
+
     let drag = null;
     let suppressClick = false;
 
