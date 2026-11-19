@@ -115,7 +115,12 @@ async function register({ repository, token, number, apiUrl }) {
     console.log(`Waiting for registration CI: ${runUrl}`);
     const deadline = Date.now() + 120_000;
     while (Date.now() < deadline) {
-      const run = await api("GET", `/actions/runs/${runId}`);
+      // The run ID can be returned before the run is visible through the API.
+      const run = await api("GET", `/actions/runs/${runId}`, undefined, [404]);
+      if (!run) {
+        await delay(4000);
+        continue;
+      }
       if (run.head_sha !== head) throw new Error(`Registration CI ran on an unexpected commit: ${runUrl}`);
       if (run.status === "completed") {
         if (run.conclusion === "success") return;
