@@ -320,6 +320,7 @@
 
   /* ---------- Contact form ---------- */
   const stage = document.querySelector(".stage");
+  const repoLinks = stage.querySelector(".repo-links");
   const contactTrigger = document.querySelector(".contact-trigger");
   const contactPanel = document.getElementById("contact-panel");
   const contactTitle = document.getElementById("contact-title");
@@ -396,7 +397,7 @@
   // WORKS out. It is always centred on the scene.
   const SPAN = { cover: 0.5, open: 1, back: 0.5 };
   const PAGER = 30; // the squares under the card, and their gap
-  const cornerControls = [languageToggle, document.querySelector(".repo-link")];
+  const cornerControls = [languageToggle, repoLinks];
   let fit = 1;
 
   function fitCard() {
@@ -445,7 +446,7 @@
   // most once a frame. Zooming in and scrolling change neither, so they leave it alone.
   let fitSize = "";
   let fitFrame = 0;
-  const sizeKey = () => `${root.clientWidth}x${root.clientHeight}x${scene.offsetWidth}`;
+  const sizeKey = () => `${root.clientWidth}x${root.clientHeight}x${scene.offsetWidth}x${repoLinks.offsetWidth}`;
   function requestFit() {
     cancelAnimationFrame(fitFrame);
     fitFrame = requestAnimationFrame(() => {
@@ -457,6 +458,7 @@
   // runs once as soon as the page is laid out.
   new ResizeObserver(requestFit).observe(root);
   new ResizeObserver(requestFit).observe(scene);
+  new ResizeObserver(requestFit).observe(repoLinks);
   addEventListener("pageshow", () => {
     fitSize = "";
     requestFit();
@@ -496,6 +498,17 @@
   setView("cover");
   scene.offsetWidth;
   scene.style.transition = "";
+
+  async function loadForkCount() {
+    const repoPath = new URL(repoLinks.querySelector(".repo-link").href).pathname;
+    const response = await fetch(`https://api.github.com/repos${repoPath}`);
+    if (!response.ok) return;
+    const { forks_count: count } = await response.json();
+    if (Number.isSafeInteger(count) && count >= 0) {
+      document.getElementById("repo-forks").textContent = count.toLocaleString("en");
+    }
+  }
+  loadForkCount().catch(() => {});
 
   /* ---------- Konami code ---------- */
   const konamiCode = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a"];
