@@ -74,8 +74,13 @@ async function register({ repository, token, number, apiUrl }) {
   const baseRef = `refs/heads/${baseBranch}`;
   const activeRequest = (pull) => pull.state === "open" && !pull.draft && pull.base.ref === baseBranch;
   if (!activeRequest(source) || source.user.type !== "User") return;
-  if (!username.test(source.user.login)) throw new Error("The request must have a valid GitHub username.");
-  const login = source.user.login.toLowerCase();
+  const { login: authorLogin, id: authorId } = source.user;
+  if (typeof authorLogin !== "string" || !username.test(authorLogin) || !Number.isSafeInteger(authorId) || authorId < 1) {
+    throw new Error("The request must have a valid GitHub username and account ID.");
+  }
+  const login = authorLogin.toLowerCase();
+  // Use the PR author's GitHub identity without copying email addresses from submitted commits.
+  const coAuthor = `Co-authored-by: ${authorLogin} <${authorId}+${authorLogin}@users.noreply.github.com>`;
   const sourceHead = fetchRef(`refs/pull/${number}/head`);
   if (sourceHead !== source.head.sha) return; // The newer synchronize event handles the updated request.
 
@@ -123,7 +128,7 @@ async function register({ repository, token, number, apiUrl }) {
     if (!existing || existing.object.sha === base) {
       await api("PUT", `/contents/${roster}`, {
         branch,
-        message: title,
+        message: `${title}\n\n${coAuthor}`,
         sha: current.blob,
         content: Buffer.from(sorted, "utf8").toString("base64"),
       });
@@ -159,7 +164,7 @@ async function register({ repository, token, number, apiUrl }) {
       const merged = await api("PUT", `${registrationPath}/merge`, {
         sha: normalizedHead,
         merge_method: mergeMethod,
-        commit_title: title,
+        ...(mergeMethod === "rebase" ? {} : { commit_title: title, commit_message: coAuthor }),
       }, [405, 409, 422]);
       if (merged?.merged) {
         await finishRequest(`${webUrl}/pull/${registration.number}`);
