@@ -769,6 +769,9 @@ body {
   --crease-left: max(0%, calc(var(--sticker-peel) - 100%)) max(0%, calc(100% - var(--sticker-peel)));
   --crease-right: min(100%, var(--sticker-peel)) min(100%, calc(200% - var(--sticker-peel)));
 }
+.scene[data-view="open"] .inner-top:has(.profile-sticker) {
+  overflow: visible;
+}
 .inner-top:has(.profile-peel[aria-expanded="true"]) {
   --sticker-peel: 200%;
 }
@@ -812,6 +815,7 @@ body {
   inset: 0;
   z-index: 3;
   pointer-events: none;
+  opacity: clamp(0%, calc((200% - var(--sticker-peel)) * 3), 100%);
   background: linear-gradient(
     atan2(55, 91),
     #fff 0% calc(var(--sticker-peel) / 2 - 9%),
