@@ -1,10 +1,10 @@
 ## 変更内容 / Summary
 
 <!--
-参加登録の場合は、下の確認項目にチェックを入れてください。ユーザー名の並び替えはBotが行います。
+このページを訪れた記念に名前を残す方は、下の確認項目にチェックを入れてください。ユーザー名の並び替えはBotが行います。
 通常の変更の場合は、ここに変更の概要を書き、下の参加登録欄を削除してください。
 
-For contributor registration, check the boxes below. The bot sorts the roster.
+To leave your name as a memento of your visit to this page, check the boxes below. The bot sorts the roster.
 For other changes, describe the change here and remove the registration section.
 -->
 
