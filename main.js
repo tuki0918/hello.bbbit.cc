@@ -126,7 +126,11 @@
     en: element.dataset.en,
   }));
   const attributeTranslations = [];
-  for (const [attribute, translation] of [["aria-label", "data-en-label"], ["title", "data-en-title"]]) {
+  for (const [attribute, translation] of [
+    ["aria-label", "data-en-label"],
+    ["title", "data-en-title"],
+    ["placeholder", "data-en-placeholder"],
+  ]) {
     for (const element of document.querySelectorAll(`[${translation}]`)) {
       attributeTranslations.push({
         element,
@@ -271,11 +275,69 @@
   renderWork();
   languageToggle.addEventListener("click", renderWork); // after setLanguage has run
 
+  /* ---------- Contact form ---------- */
+  const stage = document.querySelector(".stage");
+  const contactTrigger = document.querySelector(".contact-trigger");
+  const contactPanel = document.getElementById("contact-panel");
+  const contactTitle = document.getElementById("contact-title");
+  const contactClose = contactPanel.querySelector(".contact-close");
+  const contactForm = document.getElementById("contact-form");
+  const contactStatus = contactPanel.querySelector(".contact-status");
+  const contactMessages = {
+    incomplete: { ja: "お名前とご相談内容を入力してください。", en: "Enter your name and message." },
+    mail: { ja: "メールアプリで内容をご確認のうえ、送信してください。", en: "Review and send your message in your email app." },
+  };
+  let contactMessage = "";
+
+  function showContactMessage(message) {
+    contactMessage = message;
+    contactStatus.textContent = contactMessages[message]?.[root.lang] ?? "";
+    contactStatus.classList.toggle("error", message === "incomplete");
+  }
+  languageToggle.addEventListener("click", () => showContactMessage(contactMessage));
+
+  function setContactOpen(open) {
+    stage.classList.toggle("contact-open", open);
+    contactTrigger.setAttribute("aria-expanded", String(open));
+    contactPanel.inert = !open;
+  }
+  function closeContact() {
+    setContactOpen(false);
+    const focusTarget = view === "back" ? contactTrigger : book;
+    focusTarget.focus();
+  }
+  contactTrigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    setContactOpen(true);
+    contactTitle.focus({ preventScroll: true });
+  });
+  contactClose.addEventListener("click", closeContact);
+
+  contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showContactMessage("");
+    if (!contactForm.reportValidity()) return;
+    const data = new FormData(contactForm);
+    const name = data.get("name").trim();
+    const message = data.get("message").trim();
+    if (!name || !message) {
+      showContactMessage("incomplete");
+      return;
+    }
+    const type = data.get("type");
+    const subject = `[bbbit] ${type || "お問い合わせ"} / ${name}`;
+    const body = `お名前: ${name}\nメールアドレス: ${data.get("email")}\n会社名・団体名: ${data.get("company").trim() || "—"}\nお問い合わせの種類: ${type || "—"}\n\n${message}`;
+    const mail = document.createElement("a");
+    mail.href = `mailto:${contactTrigger.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    showContactMessage("mail");
+    mail.click();
+  });
+  contactForm.addEventListener("input", () => showContactMessage(""));
+
   /* ---------- Fit the card to the screen, for each state ---------- */
   // How much of the scene's height the paper covers: folded, opened, opened with
   // WORKS out. It is always centred on the scene.
   const SPAN = { cover: 0.5, open: 1, back: 0.5 };
-  const stage = document.querySelector(".stage");
   const PAGER = 30; // the squares under the card, and their gap
   const cornerControls = [languageToggle, document.querySelector(".repo-link")];
   let fit = 1;

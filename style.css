@@ -126,12 +126,14 @@ body {
 }
 
 .stage {
+  --stage-gap: 14px;
+  position: relative;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: var(--stage-gap);
   padding: max(20px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
 }
 
@@ -233,7 +235,8 @@ body {
   margin-block: var(--fit-top, 0px) var(--fit-bottom, 0px);
   transition:
     scale 0.8s cubic-bezier(0.3, 0.9, 0.3, 1),
-    margin 0.8s cubic-bezier(0.3, 0.9, 0.3, 1);
+    margin 0.8s cubic-bezier(0.3, 0.9, 0.3, 1),
+    translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1);
 }
 .tilt {
   width: 100%;
@@ -1509,6 +1512,7 @@ body {
   transition:
     opacity 0.4s ease-out 0.45s,
     transform 0.4s ease-out 0.45s,
+    translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
     visibility 0s 0.45s;
 }
 .scene:not([data-view="open"]) ~ .actions {
@@ -1518,6 +1522,7 @@ body {
   transition:
     opacity 0.15s,
     transform 0.15s,
+    translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
     visibility 0s 0.15s;
 }
 .btn {
@@ -1573,6 +1578,217 @@ body {
   outline-offset: 2px;
 }
 
+/* ---------- Contact form ---------- */
+.contact-panel {
+  --contact-accent: #2f6fde;
+  --contact-placeholder: #727b85;
+  --contact-required: #a43d4b;
+  width: min(100%, 460px);
+  display: grid;
+  grid-template: 0fr / minmax(0, 1fr);
+  margin-top: calc(-1 * var(--stage-gap));
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
+    margin-top 0.55s ease-out,
+    visibility 0s 0.55s;
+}
+.stage.contact-open .contact-panel {
+  grid-template-rows: 1fr;
+  margin-top: 0;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.contact-reveal {
+  min-height: 0;
+  overflow: hidden;
+}
+.contact-surface {
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--ink);
+}
+.contact-title {
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e6e8eb;
+  color: var(--navy);
+  font-size: 1.45rem;
+  letter-spacing: -0.01em;
+}
+[lang="en"] .contact-title {
+  font-family: var(--font-en);
+}
+.contact-form,
+.contact-fields {
+  display: grid;
+  gap: 16px;
+}
+.contact-field {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.contact-field-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
+}
+.contact-required {
+  color: var(--contact-required);
+}
+.contact-optional {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.contact-field :is(input, select, textarea) {
+  width: 100%;
+  min-width: 0;
+  min-height: 47px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 4%);
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+.contact-field :is(input, select, textarea):hover {
+  border-color: #bcc3c9;
+}
+.contact-field :is(input, select, textarea):focus {
+  border-color: var(--contact-accent);
+  outline: 2px solid rgb(47 111 222 / 24%);
+  outline-offset: 1px;
+}
+.contact-field :is(input, textarea)::placeholder,
+.contact-field select:has(option[value=""]:checked) {
+  color: var(--contact-placeholder);
+}
+.contact-field :is(input, textarea)::placeholder {
+  font-size: 14px;
+  opacity: 1;
+}
+.contact-field select {
+  appearance: none;
+  padding-inline-end: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23071428' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+.contact-field select option:not([value=""]) {
+  color: var(--ink);
+}
+@media (forced-colors: active) {
+  .contact-field select {
+    appearance: auto;
+    padding-inline-end: 12px;
+    background-image: none;
+  }
+}
+.contact-field textarea {
+  resize: vertical;
+  min-height: 124px;
+}
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contact-actions .btn {
+  padding-inline: clamp(10px, 1.55vw, 18px);
+}
+.contact-submit {
+  gap: 10px;
+  border-color: var(--navy);
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+}
+.contact-submit:hover {
+  background: #0d2a52;
+}
+.contact-close {
+  margin-inline-start: auto;
+  border: 0;
+  border-radius: 12px;
+  background: #eef0f2;
+}
+.contact-close:hover {
+  background: #e3e7eb;
+}
+.contact-status {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.contact-status:empty {
+  display: none;
+}
+.contact-status.error {
+  color: var(--contact-required);
+}
+
+@media (max-width: 49.999rem) {
+  .stage.contact-open {
+    justify-content: flex-start;
+  }
+  .stage.contact-open .scene:not([data-view="open"]) ~ .actions {
+    display: none;
+  }
+  .contact-surface {
+    translate: 0 100dvh;
+    transition: translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1);
+  }
+  .stage.contact-open .contact-surface {
+    translate: none;
+  }
+}
+@media (min-width: 50rem) {
+  .stage {
+    --contact-gap: clamp(26px, 4vw, 52px);
+    --contact-width: min(460px, calc(100vw - var(--w) - var(--contact-gap) - 48px));
+  }
+  .stage.contact-open :is(.scene, .actions) {
+    translate: calc((var(--contact-width) + var(--contact-gap)) / -2) 0;
+  }
+  .contact-panel {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(50% + (var(--w) - var(--contact-width) + var(--contact-gap)) / 2);
+    width: var(--contact-width);
+    grid-template-rows: 1fr;
+    margin-top: 0;
+    transform: translateY(-50%);
+    translate: 100vw 0;
+    transition:
+      translate 0.55s cubic-bezier(0.22, 0.8, 0.3, 1),
+      visibility 0s 0.55s;
+  }
+  .stage.contact-open .contact-panel {
+    translate: none;
+  }
+  .contact-surface {
+    max-height: calc(100dvh - 104px);
+    overflow: auto;
+  }
+  .contact-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Short landscape screens: the card is sized by its width here, and main.js shrinks
    it to the height for each state. The Home button may fall below the fold. */
 @media (orientation: landscape) and (max-height: 500px) {
@@ -1596,6 +1812,8 @@ body {
   .shadow,
   .pager,
   .actions,
+  .contact-panel,
+  .contact-surface,
   .tilt {
     transition-duration: 0.01s;
   }
