@@ -65,7 +65,7 @@ body {
   /* One cell is the card's cell (2.2em = a tenth of its width), so the page's
      vertical lines run into the card's edges. */
   --cell: calc(var(--w) / 10);
-  --grid-cell: calc(var(--cell) / var(--hello-division, 1));
+  --grid-cell: calc(var(--cell) / var(--message-division, 1));
 }
 .backdrop::before {
   content: "";
@@ -106,22 +106,22 @@ body {
   box-shadow: inset 0 0 0 1px rgb(7 20 40 / 16%);
   --o: 1;
 }
-@property --hello-shift {
+@property --message-shift {
   syntax: "<angle>";
   inherits: true;
   initial-value: 0deg;
 }
-.backdrop-hello {
-  --hello-shift: 0deg;
+.backdrop-message {
+  --message-shift: 0deg;
   position: absolute;
-  left: calc(50% + var(--hello-x) * var(--grid-cell));
-  top: calc(50% + var(--hello-y) * var(--grid-cell));
+  left: calc(50% + var(--message-x) * var(--grid-cell));
+  top: calc(50% + var(--message-y) * var(--grid-cell));
   display: grid;
   grid-auto-rows: var(--grid-cell);
 }
-.backdrop-hello span {
+.backdrop-message span {
   margin: 1px 0 0 1px;
-  background: oklch(0.62 0.17 calc(14deg + var(--hello-column) * 15deg + var(--hello-shift)));
+  background: oklch(0.62 0.17 calc(14deg + var(--message-column) * 15deg + var(--message-shift)));
 }
 @media (prefers-reduced-motion: no-preference) {
   .backdrop::before {
@@ -133,11 +133,11 @@ body {
   .backdrop.konami .bit {
     animation: konami-wave 0.65s ease-out var(--wave-delay) both;
   }
-  .backdrop-hello {
-    animation: hello-fade 3.9s ease both, hello-color-shift 3s linear 0.65s both;
+  .backdrop-message {
+    animation: message-fade 3.9s ease both, message-color-shift 3s linear 0.65s both;
   }
-  .backdrop-hello span {
-    animation: hello-dot 0.42s ease-out calc(482ms + var(--hello-column) * 22ms) both;
+  .backdrop-message span {
+    animation: message-dot 0.42s ease-out calc(482ms + var(--message-column) * 22ms) both;
   }
 }
 @keyframes backdrop-drift {
@@ -157,14 +157,14 @@ body {
     opacity: 0.85;
   }
 }
-@keyframes hello-dot {
+@keyframes message-dot {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes hello-color-shift {
-  to { --hello-shift: -105deg; }
+@keyframes message-color-shift {
+  to { --message-shift: -105deg; }
 }
-@keyframes hello-fade {
+@keyframes message-fade {
   0%, 82% { opacity: 1; }
   to { opacity: 0; }
 }

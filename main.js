@@ -462,18 +462,19 @@
     Number(a.style.getPropertyValue("--x")) - Number(b.style.getPropertyValue("--x")),
   );
   backdropBits.forEach((bit, index) => bit.style.setProperty("--wave-delay", `${index * 35}ms`));
-  const helloGlyphs = [
-    ["101", "101", "111", "101", "101"], // H
-    ["111", "100", "110", "100", "111"], // E
-    ["100", "100", "100", "100", "111"], // L
-    ["100", "100", "100", "100", "111"], // L
-    ["111", "101", "101", "101", "111"], // O
+  const messageGlyphs = [
+    ["111", "001", "111", "100", "111"], // 2
+    ["111", "101", "101", "101", "111"], // 0
+    ["111", "101", "101", "101", "111"], // 0
+    ["0", "0", "0", "0", "0"], // Space
+    ["010", "101", "101", "101", "010"], // O
+    ["1001", "1010", "1100", "1010", "1001"], // K
   ];
-  const helloColumns = helloGlyphs.length * 4 - 1;
-  const helloRows = helloGlyphs[0].length;
-  let helloTimeout;
+  const messageColumns = messageGlyphs.reduce((width, glyph) => width + glyph[0].length + 1, -1);
+  const messageRows = messageGlyphs[0].length;
+  let messageTimeout;
 
-  function fitBackdropHello(hello) {
+  function fitBackdropMessage(message) {
     // The backdrop grid crosses the centre of the screen along both axes.
     const { width, height } = backdrop.getBoundingClientRect();
     const centerX = width / 2;
@@ -496,9 +497,9 @@
       return Math.max(first, Math.min(last, ideal));
     }
     function position(division, x, y) {
-      backdrop.style.setProperty("--hello-division", division);
-      hello.style.setProperty("--hello-x", x);
-      hello.style.setProperty("--hello-y", y);
+      backdrop.style.setProperty("--message-division", division);
+      message.style.setProperty("--message-x", x);
+      message.style.setProperty("--message-y", y);
     }
 
     // Keep the original squares when they fit. Subdivisions share the same grid lines.
@@ -506,49 +507,53 @@
     for (let division = 1; division <= maxDivision; division++) {
       const cell = baseCell / division;
       for (const space of spaces) {
-        const x = gridStart(space.left, space.right, centerX, cell, helloColumns);
-        const y = gridStart(space.top, space.bottom, centerY, cell, helloRows);
+        const x = gridStart(space.left, space.right, centerX, cell, messageColumns);
+        const y = gridStart(space.top, space.bottom, centerY, cell, messageRows);
         if (x === null || y === null) continue;
         position(division, x, y);
         return;
       }
     }
-    position(maxDivision, -Math.floor(helloColumns / 2), Math.ceil((8 - centerY) / (baseCell / maxDivision)));
+    position(maxDivision, -Math.floor(messageColumns / 2), Math.ceil((8 - centerY) / (baseCell / maxDivision)));
   }
 
-  function showBackdropHello() {
-    const hello = document.createElement("div");
-    hello.className = "backdrop-hello";
-    hello.style.gridTemplateColumns = `repeat(${helloColumns}, var(--grid-cell))`;
-    helloGlyphs.forEach((glyph, letter) => glyph.forEach((row, y) => {
-      [...row].forEach((filled, x) => {
-        if (filled === "0") return;
-        const dot = document.createElement("span");
-        const column = letter * 4 + x + 1;
-        dot.style.gridColumn = column;
-        dot.style.gridRow = y + 1;
-        dot.style.setProperty("--hello-column", column - 1);
-        hello.append(dot);
+  function showBackdropMessage() {
+    const message = document.createElement("div");
+    message.className = "backdrop-message";
+    message.style.gridTemplateColumns = `repeat(${messageColumns}, var(--grid-cell))`;
+    let startColumn = 0;
+    for (const glyph of messageGlyphs) {
+      glyph.forEach((row, y) => {
+        [...row].forEach((filled, x) => {
+          if (filled === "0") return;
+          const dot = document.createElement("span");
+          const column = startColumn + x;
+          dot.style.gridColumn = column + 1;
+          dot.style.gridRow = y + 1;
+          dot.style.setProperty("--message-column", column);
+          message.append(dot);
+        });
       });
-    }));
+      startColumn += glyph[0].length + 1;
+    }
 
-    clearTimeout(helloTimeout);
-    backdrop.querySelector(".backdrop-hello")?.remove();
+    clearTimeout(messageTimeout);
+    backdrop.querySelector(".backdrop-message")?.remove();
     backdrop.classList.remove("konami");
     backdrop.offsetWidth; // Restart the wave when the code is entered again.
     backdrop.classList.add("konami");
-    fitBackdropHello(hello);
-    backdrop.append(hello);
-    helloTimeout = setTimeout(() => {
-      hello.remove();
+    fitBackdropMessage(message);
+    backdrop.append(message);
+    messageTimeout = setTimeout(() => {
+      message.remove();
       backdrop.classList.remove("konami");
-      backdrop.style.removeProperty("--hello-division");
+      backdrop.style.removeProperty("--message-division");
     }, 3900);
   }
 
   window.addEventListener("resize", () => {
-    const hello = backdrop.querySelector(".backdrop-hello");
-    if (hello) fitBackdropHello(hello);
+    const message = backdrop.querySelector(".backdrop-message");
+    if (message) fitBackdropMessage(message);
   });
 
   window.addEventListener("keydown", (event) => {
@@ -563,7 +568,7 @@
     if (recentKeys.length > konamiCode.length) recentKeys.shift();
     if (recentKeys.length === konamiCode.length && konamiCode.every((key, index) => key === recentKeys[index])) {
       recentKeys.length = 0;
-      showBackdropHello();
+      showBackdropMessage();
     }
   });
 
