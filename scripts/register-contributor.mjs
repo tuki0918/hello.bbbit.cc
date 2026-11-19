@@ -32,7 +32,6 @@ function requireRosterOnly(base, head) {
 
 function validateRequest(base, head, login) {
   // 実績の解除は参加案内の演出。PRの受付では実績の達成状況を厳密に検証しない。
-  // GitHub上の投稿者本人のユーザー名と、名簿への追加内容を検証する。
   const common = git("merge-base", base, head).trim();
   requireRosterOnly(common, head);
   const before = new Set(readRoster(common).names);
@@ -79,7 +78,6 @@ async function register({ repository, token, number, apiUrl }) {
     throw new Error("The request must have a valid GitHub username and account ID.");
   }
   const login = authorLogin.toLowerCase();
-  // Use the PR author's GitHub identity without copying email addresses from submitted commits.
   const coAuthor = `Co-authored-by: ${authorLogin} <${authorId}+${authorLogin}@users.noreply.github.com>`;
   const sourceHead = fetchRef(`refs/pull/${number}/head`);
   if (sourceHead !== source.head.sha) return; // The newer synchronize event handles the updated request.
@@ -112,7 +110,6 @@ async function register({ repository, token, number, apiUrl }) {
     validateRequest(base, sourceHead, login);
     const current = readRoster(base);
     if (current.names.some((name) => name.toLowerCase() === login)) {
-      // Resume a run that already merged its registration before approving the request.
       const recorded = git("log", "-1", "--format=%H", `--grep=^${title}$`, base, "--", roster).trim();
       if (recorded) await finishRequest(`${webUrl}/commit/${recorded}`);
       else console.log(`@${login} is already registered.`);

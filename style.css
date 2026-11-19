@@ -54,8 +54,6 @@ body {
 }
 
 /* ---------- Backdrop ---------- */
-/* The desk the card lies on: soft glows, the card's own grid carried out across
-   the page, and a few lit cells ("bits") like the square in the logo. */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -181,8 +179,6 @@ body {
   padding: max(20px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
 }
 
-/* Language toggle: a quiet translate icon in the corner, with the language the
-   card is in now written beside it. No frame or fill until it is pointed at. */
 .language-toggle:not([hidden]) {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
@@ -196,7 +192,6 @@ body {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  /* Same grey as the small print on the card: quiet, but clearly readable. */
   color: var(--muted);
   cursor: pointer;
   font: inherit;
@@ -217,7 +212,6 @@ body {
   line-height: 1;
   letter-spacing: 0.02em;
 }
-/* "English" in the card's English face, like the name and title. */
 .language-toggle-label:lang(en) {
   font-family: var(--font-en);
   letter-spacing: 0.04em;
@@ -226,7 +220,6 @@ body {
   background: rgb(7 20 40 / 6%);
   color: var(--ink);
 }
-/* The card's source on GitHub: top right, opposite the language toggle and as quiet. */
 .repo-link {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
@@ -374,7 +367,6 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: 0 2.2em;
-  /* The same white paper as the profile panel above it. */
   background: #fff;
   color: var(--navy);
   /* Hairlines down the sides only: none across the paper at the folds. */
@@ -536,7 +528,6 @@ body {
 .work[aria-pressed="true"]::after {
   transform: scale(1);
 }
-/* The last tile is a plus: more works, on the full list. */
 .more-tile {
   display: grid;
   place-items: center;
@@ -1170,7 +1161,6 @@ body {
 .like {
   --fill: 0;
 }
-/* The IT tile is a button too: it sends a like to the first thumb. */
 .like,
 .like-source {
   appearance: none;
@@ -1230,7 +1220,6 @@ body {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
-/* How many likes this thumb holds. */
 .like-count {
   position: absolute;
   top: -0.8em;

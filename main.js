@@ -40,7 +40,6 @@
     }
   }
 
-  // X のプロフィールなどから ?s=x 付きで来た人には、X での名前とアバターで表示する。
   if (new URLSearchParams(location.search).get("s") === "x") {
     const baseProfile = document.getElementById("profile-base");
     const baseName = baseProfile.querySelector(".inner-name");
@@ -152,7 +151,6 @@
 
   const languageToggle = document.querySelector(".language-toggle");
   const languageToggleLabel = languageToggle.querySelector(".language-toggle-label");
-  // The toggle shows the language the card is in now; pressing it switches to the other.
   const TOGGLE = {
     ja: { to: "en", label: "日本語", aria: "言語：日本語（English に切り替える）" },
     en: { to: "ja", label: "English", aria: "Language: English (switch to 日本語)" },
@@ -280,7 +278,6 @@
   }
   worksToggle.addEventListener("click", () => setFold(!unfolded));
 
-  // The app icons: tapping one describes it on the lower half of the pleat.
   const works = [...document.querySelectorAll("button.work")];
   const workDetail = document.querySelector(".work-detail");
   const workName = workDetail.querySelector(".work-name");
@@ -452,7 +449,6 @@
   // runs once as soon as the page is laid out.
   new ResizeObserver(requestFit).observe(root);
   new ResizeObserver(requestFit).observe(scene);
-  // Coming back to the page (reload, back/forward): measure again from scratch.
   addEventListener("pageshow", () => {
     fitSize = "";
     requestFit();
@@ -469,7 +465,6 @@
     unlockAchievement(next);
   }
   function nextView() {
-    // With the pleat out, the paper first folds back to the plain spread.
     if (unfolded) {
       setFold(false);
       return;
@@ -711,7 +706,6 @@
     badge: button.querySelector(".like-count"),
     count: 0,
   }));
-  // The IT tile is the source: it holds no likes, it sends one to the first thumb.
   const likeSource = flow.querySelector(".like-source");
   // One arrow leads into each thumb: the first from the IT tile, the rest from the thumb before.
   const likeArrows = [...flow.querySelectorAll(".flow-arrow")];
@@ -741,7 +735,6 @@
     });
   }
 
-  // A like stays at the thumb it reaches, and only moves on once that thumb is full.
   function addLike(index) {
     if (celebrating) return;
     const like = likes[index];

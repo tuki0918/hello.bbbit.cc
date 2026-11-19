@@ -56,15 +56,12 @@
       </div>
     </div>
     <main class="stage">
-      <!-- 言語の切り替え。押すたびに日本語 ⇄ English。ラベルはいま表示している言語を示す。 -->
       <button type="button" class="language-toggle" hidden>
-        <!-- 翻訳アイコン（塗りの形なので小さくても線がにじまない）。 -->
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" />
         </svg>
         <span class="language-toggle-label"></span>
       </button>
-      <!-- この名刺のソースコード（GitHub）。左上の言語切り替えと対になる、右上の静かなリンク。 -->
       <a class="repo-link" href="https://github.com/tuki0918/hello.bbbit.cc" target="_blank" rel="noopener noreferrer" aria-label="この名刺のソースコード（GitHub）" data-en-label="Source code of this card (GitHub)" title="Source on GitHub">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>
       </a>
@@ -90,7 +87,6 @@
                   <span class="localized-copy" lang="en">bbbit uses IT and AI to tackle the little<br /><mark>hassles</mark> that get in the way of everyday life.</span>
                 </p>
                 <div class="rule" aria-hidden="true"><span></span></div>
-                <!-- IT・AI と「いいね」は押せる。IT・AI を押すと矢印が光り、最初の「いいね」へ届く。たまると次のマスへ矢印を通って流れ、3 つとも満ちると紙吹雪が飛んで最初に戻る。 -->
                 <div class="flow" role="group" aria-label="IT・AI を活かして、あなた、家族・仲間、地域・社会へ「いいね」を届ける" data-en-label="IT and AI, for you, your circle, and your community.">
                   <button type="button" class="node node-it like-source" aria-label="IT・AI から「いいね」を届ける" data-en-label="Send a like from IT &amp; AI"><span class="tile"><svg viewBox="0 0 43 48"><path d="M0 14h9v34H0zM23 0h9v14h11v9H32v16h11v9H23V23h-8v-9h8V0Z" /><path class="it-dot" d="M0 0h9v9H0z" /></svg></span><span class="node-label" data-en="IT &amp; AI">IT・AI</span></button>
                   <svg class="flow-arrow" viewBox="0 0 32 14" aria-hidden="true"><path d="M1 7h30m-5-5 5 5-5 5" /></svg>
@@ -151,7 +147,6 @@
                     </div>
                   </div>
                   <div class="id-foot">
-                    <!-- 押すと、上面と下面のあいだに折り込まれた WORKS の面がひらく。 -->
                     <button type="button" class="works-link" id="works-toggle" aria-expanded="false" aria-controls="works" aria-label="WORKS をひらく" data-en-label="Unfold WORKS">
                       <span>WORKS</span>
                       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
@@ -194,8 +189,6 @@
               </section>
             </div>
 
-            <!-- 上面と下面のあいだに谷折りで畳まれた面。WORKS を押すと上下がひらいて平らになる。
-                 上の半分はアプリのアイコン、下の半分は選んだものの紹介。 -->
             <section class="pleat pleat-top" id="works" aria-label="WORKS" inert>
               <ul class="works-apps">
                   <li><button type="button" class="work" aria-pressed="false" aria-label="Media Preview Server" data-name="Media Preview Server" data-href="https://bbbit.cc/works/media-preview-server" data-desc="Eagleのライブラリを、LAN内の端末から閲覧。" data-desc-en="Browse your Eagle library from any device on your LAN."><img src="https://bbbit.cc/images/media-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
@@ -203,7 +196,6 @@
                   <li><button type="button" class="work" aria-pressed="false" aria-label="MergeMate" data-name="MergeMate" data-href="https://bbbit.cc/works/mergemate" data-desc="2枚の画像を自動で位置合わせし、結合。" data-desc-en="Automatically align two images and merge them into one."><img src="https://bbbit.cc/images/mergemate-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
                   <li><button type="button" class="work" aria-pressed="false" aria-label="BundlePack" data-name="BundlePack" data-href="https://bbbit.cc/works/bundlepack" data-desc="ファイルやフォルダを、サムネイル付きの1つのパッケージに。" data-desc-en="Bundle files and folders into a single package, with thumbnails."><img src="https://bbbit.cc/images/bundlepack-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
                   <li><button type="button" class="work" aria-pressed="false" aria-label="Pixzle" data-name="Pixzle" data-href="https://bbbit.cc/works/pixzle" data-desc="画像をブロックに分割・シャッフル。元の画像への復元も。" data-desc-en="Scramble an image into shuffled blocks, and restore it."><img src="https://bbbit.cc/images/pixzle-icon.webp" alt="" width="128" height="128" decoding="async" fetchpriority="low" /></button></li>
-                  <!-- 最後のタイルは作品ではなく、一覧ページへの入口。 -->
                   <li><a class="work work-more" href="https://bbbit.cc/works" target="_blank" rel="noopener noreferrer" aria-label="ほかの作品も見る" data-en-label="See more works" title="and more"><span class="more-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></span></a></li>
               </ul>
             </section>
