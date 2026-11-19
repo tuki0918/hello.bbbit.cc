@@ -1576,12 +1576,26 @@ body {
   color: var(--ink);
 }
 .contact-title {
+  --contact-icon-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 18px;
   padding-bottom: 12px;
   border-bottom: 1px solid #e6e8eb;
   color: var(--navy);
   font-size: 1.45rem;
   letter-spacing: -0.01em;
+}
+.contact-title svg {
+  flex: none;
+  width: var(--contact-icon-size);
+  height: var(--contact-icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 [lang="en"] .contact-title {
   font-family: var(--font-en);
