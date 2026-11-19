@@ -1,9 +1,12 @@
 # 公開しないファイル（wrangler.jsonc の assets.directory がリポジトリ直下のため）
 .git
+.github/
 .claude
 .DS_Store
 .assetsignore
 wrangler.jsonc
 og/
 README.md
+CONTRIBUTORS.txt
+scripts/register-contributor.mjs
 LICENSE

@@ -17,6 +17,7 @@
   };
   const achievementTotal = Object.keys(achievements).length;
   const unlockedAchievements = new Set();
+  const achievementBadgeStyle = "background:#071428;color:#b1f2f7;padding:3px 7px;border-radius:4px;font-weight:700";
 
   function unlockAchievement(id) {
     if (unlockedAchievements.has(id)) return;
@@ -27,9 +28,16 @@
     const separator = english ? ": " : "：";
     console.info(
       `%c🏆 ${title} (${unlockedAchievements.size}/${achievementTotal})%c${separator}[${label}]`,
-      "background:#071428;color:#b1f2f7;padding:3px 7px;border-radius:4px;font-weight:700",
+      achievementBadgeStyle,
       "font-weight:700",
     );
+    if (unlockedAchievements.size === achievementTotal) {
+      const completion = english ? "All Achievements Unlocked!" : "実績コンプリート！";
+      const invitation = english
+        ? "Leave your GitHub username in the contributor list."
+        : "記念に、あなたのGitHubユーザー名を参加者一覧に残しませんか？";
+      console.info(`%c🏆 ${completion}%c ${invitation} ${document.querySelector(".repo-link").href}#contributors`, achievementBadgeStyle, "");
+    }
   }
 
   // X のプロフィールなどから ?s=x 付きで来た人には、X での名前とアバターで表示する。

@@ -1,0 +1,38 @@
+name: Register contributors
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+    paths: [CONTRIBUTORS.txt]
+  workflow_dispatch:
+    inputs:
+      pull-request:
+        description: Contributor request PR number
+        required: true
+        type: number
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: contributor-registration
+  queue: max
+
+jobs:
+  register:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.user.type == 'User' && !github.event.pull_request.draft)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out trusted automation
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate and register contributor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONTRIBUTOR_PR: ${{ github.event.pull_request.number || inputs['pull-request'] }}
+        run: node scripts/register-contributor.mjs
