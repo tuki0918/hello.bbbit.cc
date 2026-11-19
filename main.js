@@ -4,6 +4,34 @@
   const tilt = document.getElementById("tilt");
   const root = document.documentElement;
 
+  /* ---------- Console achievements ---------- */
+  const achievements = {
+    cover: { ja: "カードの表紙を見た", en: "Viewed the Cover" },
+    open: { ja: "カードを開いた", en: "Opened the Card" },
+    works: { ja: "WORKSを開いた", en: "Opened WORKS" },
+    portrait: { ja: "中の人の正体をあばいた", en: "Unmasked the Person Behind the Card" },
+    likes: { ja: "3つの「いいね」を満タンにした", en: "Filled All Three Like Meters" },
+    back: { ja: "カードの裏面を見た", en: "Viewed the Back" },
+    contact: { ja: "お問い合わせフォームを開いた", en: "Opened the Contact Form" },
+    konami: { ja: "コナミコマンドを入力した", en: "Entered the Konami Code" },
+  };
+  const achievementTotal = Object.keys(achievements).length;
+  const unlockedAchievements = new Set();
+
+  function unlockAchievement(id) {
+    if (unlockedAchievements.has(id)) return;
+    unlockedAchievements.add(id);
+    const label = achievements[id][root.lang];
+    const english = root.lang === "en";
+    const title = english ? "Achievement Unlocked" : "実績解除";
+    const separator = english ? ": " : "：";
+    console.info(
+      `%c🏆 ${title} (${unlockedAchievements.size}/${achievementTotal})%c${separator}[${label}]`,
+      "background:#071428;color:#b1f2f7;padding:3px 7px;border-radius:4px;font-weight:700",
+      "font-weight:700",
+    );
+  }
+
   // X のプロフィールなどから ?s=x 付きで来た人には、X での名前とアバターで表示する。
   if (new URLSearchParams(location.search).get("s") === "x") {
     const baseProfile = document.getElementById("profile-base");
@@ -62,6 +90,7 @@
         baseName.tabIndex = -1;
         baseName.focus({ preventScroll: true });
       }
+      unlockAchievement("portrait");
     }
 
     window.addEventListener("pointerdown", (event) => {
@@ -239,6 +268,7 @@
     [label.ja, label.en] = FOLD_LABEL[open];
     worksToggle.setAttribute("aria-label", label[root.lang === "en" ? "en" : "ja"]);
     for (const pleat of pleats) pleat.inert = !open;
+    if (open) unlockAchievement("works");
   }
   worksToggle.addEventListener("click", () => setFold(!unfolded));
 
@@ -305,6 +335,7 @@
     stage.classList.toggle("contact-open", open);
     contactTrigger.setAttribute("aria-expanded", String(open));
     contactPanel.inert = !open;
+    if (open) unlockAchievement("contact");
   }
   function closeContact() {
     setContactOpen(false);
@@ -427,6 +458,7 @@
     scene.dataset.view = view;
     for (const face of faces) face.inert = !VISIBLE[view].includes(face.id);
     fitCard();
+    unlockAchievement(next);
   }
   function nextView() {
     // With the pleat out, the paper first folds back to the plain spread.
@@ -569,6 +601,7 @@
     if (recentKeys.length === konamiCode.length && konamiCode.every((key, index) => key === recentKeys[index])) {
       recentKeys.length = 0;
       showBackdropMessage();
+      unlockAchievement("konami");
     }
   });
 
@@ -740,6 +773,7 @@
   function celebrate() {
     celebrating = true;
     flow.classList.add("celebrating");
+    unlockAchievement("likes");
     if (!reduceMotion) throwConfetti(likes[likes.length - 1].tile);
     setTimeout(
       () => {
